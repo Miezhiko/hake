@@ -40,12 +40,13 @@ buildObjects [] objs =
                   compare (S.size d1) (S.size d2)) objs
   in for_ sortedObjects $ uncurry (compileObj True)
 buildObjects args objs =
-  let objectsInArgs = filter ((∈ args) . fst) objs
+  let objectsWithBaseNames  = map (\(f, bd) -> (takeBaseName f, (f, bd))) objs
+      objectsInArgs         = filter ((∈ args) . fst) objectsWithBaseNames
   in case objectsInArgs of
     [] -> buildObjects [] objs
-    xs -> for_ objs $ \(f, bd) →
+    xs -> for_ objectsWithBaseNames $ \(fbase, (f, bd)) →
             let filtereredArgs = map fst xs
-            in when (f ∈ filtereredArgs) $
+            in when (fbase ∈ filtereredArgs) $
               compileObj True f bd
 
 hake ∷ IO () → IO ()
@@ -78,8 +79,10 @@ displayHelp = do
     let objectsList = M.toList myObjects
         maxNameLen = maximum $ map (length . fst) objectsList
     for_ objectsList $ \(r, (_, deps)) →
-      let additionalSpacesCount = maxNameLen - length r
-          spaces = replicate additionalSpacesCount ' '
+      let based                 = takeBaseName r
+          additionalSpacesCount = maxNameLen - length based
+          spaces                = replicate additionalSpacesCount ' '
       in if S.null deps
-          then putStrLn $ "  " ++ r
-          else putStrLn $ "  " ++ r ++ spaces ++ " :" ++ show (S.toList deps)
+          then putStrLn $ "  " ++ based
+          else let basedObjects = map takeBaseName (S.toList deps)
+               in putStrLn $ "  " ++ based ++ spaces ++ " : " ++ show basedObjects
