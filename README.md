@@ -1,7 +1,10 @@
 # hake
 
-more to come
+build
+-----
 
 ```bash
 stack build
 ```
+
+![Usage](/usage/example.png)
