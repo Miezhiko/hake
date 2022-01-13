@@ -1,0 +1,53 @@
+name:           hake
+version:        0.0.1
+license:        LGPL21
+category:       Development
+
+build-type:     Simple
+cabal-version:  >= 2.0
+
+library
+  Hs-Source-Dirs: src
+  exposed-modules:
+      Hake.Lib
+  Other-Modules:
+      Hake.Global
+      Hake.Optional
+      Hake.Core
+  Build-Depends:
+      base
+    , process
+    , split
+    , directory
+    , filepath
+    , time
+    , base-unicode-symbols
+
+Executable    hake
+  Main-Is:    Main.hs
+  Hs-Source-Dirs: src
+  Other-Modules:
+    Hake
+    Version
+    Script
+
+    Hake.Lib
+    Hake.Global
+    Hake.Optional
+    Hake.Core
+    Paths_hake
+
+  Build-Depends:
+      base
+    , process
+    , split
+    , directory
+    , filepath
+    , time
+    , MissingH
+    , hake
+    , base-unicode-symbols
+
+  if !os(windows)
+    Build-Depends:
+      unix

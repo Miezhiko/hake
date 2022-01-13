@@ -1,0 +1,7 @@
+flags: {}
+arch: i386, x86_64
+system-ghc: true
+allow-newer: true
+packages:
+ - '.'
+resolver: nightly-2022-01-13
