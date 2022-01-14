@@ -30,7 +30,7 @@ main = hake $ do
       >>= checkExitCode
 
  where buildPath ∷ String
-       buildPath = "dist-newstyle/build"
+       buildPath = "dist-newstyle"
 
        hakeExecutable ∷ String
        hakeExecutable =
