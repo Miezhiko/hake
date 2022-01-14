@@ -1,135 +1,142 @@
-{-# LANGUAGE CPP           #-}
-{-# LANGUAGE LambdaCase    #-}
-{-# LANGUAGE MultiWayIf    #-}
-{-# LANGUAGE RankNTypes    #-}
-{-# LANGUAGE UnicodeSyntax #-}
+{-# LANGUAGE CPP                   #-}
+{-# LANGUAGE DataKinds             #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE MultiWayIf            #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE RankNTypes            #-}
+{-# LANGUAGE UnicodeSyntax         #-}
 
 module Hake
-  ( hakeIt
-  , hakeItF
-  , module Hake.Lib
+  ( hake
+  , phony, obj
+  , (◉)
+  , (#>), (@>), (##>), (@@>)
+  , (♯), (♯♯)
+  , (∫), (∰)
+  , module HakeScript
   ) where
 
-import           Script
-import           Hake.Lib
+import           Data.IORef
 
-import           System.IO
-
-import           Data.String.Utils
-import           Data.Maybe
-
-import           Control.Concurrent
-import           Control.Exception
 import           Control.Monad
 
-#if ( defined(mingw32_HOST_OS) || defined(__MINGW32__) )
-readCheck    -- return whether command was success or not
-  ∷ String   -- command
-  → [String] -- arguments
-  → IO (Either SomeException String)
-readCheck γ args = try $ readProcess γ args []
+import           Hake.Optional
+import           Hake.Core          as HakeScript
+import           Hake.Lang.Haskell  as HakeScript
 
-checkIfSucc           -- check if success
-  ∷ String            -- command to check
-  → [String]          -- arguments
-  → IO (Maybe String) -- Just cmd in case of success
-checkIfSucc γ args =
-  readCheck γ args
-    ≫= \case Left _ → return Nothing
-             Right val → do putStr $ γ ⧺ " : " ⧺ val
-                            return (Just γ)
+hake ∷ IO () → IO ()
+hake maybeAction = do
+  args ← getArgs
+  writeIORef phonyArgs args
+  maybeAction
+  if | "-h" ∈ args ∨ "--help" ∈ args → displayHelp
+     | otherwise → do
+        myObjects ← readIORef objects
+        forM_ myObjects $ uncurry compileObj
 
-versionCheck          -- check for ghc --version
-  ∷ String            -- command to check
-  → IO (Maybe String) -- Path to GHC in case of success
-versionCheck γ = checkIfSucc γ ["--version"]
+displayHelp ∷ IO ()
+displayHelp = do
+  myPhonyActions ← readIORef phonyActions
+  forM_ (reverse myPhonyActions) $ \(r, _, d) →
+    putStrLn $ "  " ++ r ++ " :" ++ d
 
-checkForStackGHC
-  ∷ Maybe String
-  → IO (Maybe String)
-checkForStackGHC γ =
-  if isNothing γ
+phony :: (Optional1 [String] (String → IO () → IO ()) r) ⇒ r
+phony = opt1 gPhony []
+
+gPhony ∷ [String] → String → IO () → IO ()
+gPhony [] arg phonyAction = do
+  args ← readIORef phonyArgs
+  let (an, de) = nameAndDesc arg
+  if an ∈ args
+    then do phonyAction
+            filtered ← removePhonyArg args an
+            when (null filtered) exitSuccess
+    else do currentPhony ← readIORef phonyActions
+            let new = (an, phonyAction, de) : currentPhony
+            writeIORef phonyActions new
+gPhony deps arg complexPhonyAction = do
+  myPhonyArgs ← readIORef phonyArgs
+  myPhonyActions ← readIORef phonyActions
+  let (an, de) = nameAndDesc arg
+  if an ∈ myPhonyArgs
     then do
-      localAppData ← getEnv("LOCALAPPDATA")
-      let path = localAppData </> "Programs/stack/x86_64-windows/"
-      stackPackages ← getDirectoryContents path
-      let ghcPackages = filter (startswith "ghc") stackPackages
-      stackGHV ←
-        case ghcPackages of
-          [] → do appData ← getEnv("APPDATA")
-                  return $ appData </> "local/bin/ghc.exe"
-          xs → let lastGHC = last xs
-               in return $ path </> lastGHC </> "bin/ghc.exe"
-      versionCheck stackGHV
-    else return γ
+      myObjects ← readIORef objects
+      forM_ deps $ \dep → do
+        forM_ myObjects $ \(file, buildAction) →
+          when (dep == file) $
+            compileObj file buildAction
+        forM_ myPhonyActions $ \(rule, phonyAction, _) →
+          when (dep == rule) $ compilePhony rule phonyAction
+      complexPhonyAction
+      filtered ← removePhonyArg myPhonyArgs an
+      when (null filtered) exitSuccess
+    else let new = (an, complexPhonyAction, de) : myPhonyActions
+         in writeIORef phonyActions new
 
-getGHC ∷ IO String
-getGHC = return Nothing ≫= λ "ghc"
-                        ≫= checkForStackGHC
-                        ≫= \res → return $ fromMaybe "ghc" res
-  where λ ∷ String → Maybe String → IO (Maybe String)
-        λ χ prev = if isNothing prev
-                      then versionCheck χ
-                      else return prev
-#endif
+obj :: (Optional1 [String] (FilePath → IO () → IO ()) r) ⇒ r
+obj = opt1 gObj []
 
-hakeIt ∷ [String]
-        → String  -- current directory
-        → Bool    -- force
-        → Bool    -- pretend
-        → String  -- platform
-        → IO ()
-hakeIt args current force pretend platform = do
-  let fullNamelhs = current </> "hake.lhs"
-      fullNamehs  = current </> "hake.hs"
-      hakeHake  = hakeItF args current force pretend platform
-  existslhs ← doesFileExist fullNamelhs
-  existshs  ← doesFileExist fullNamehs
-  if | existslhs → hakeHake fullNamelhs
-     | existshs  → hakeHake fullNamehs
-     | otherwise →
-        unless ("-h" ∈ args ∨ "--help" ∈ args) $
-          putStrLn "no hake.hs / hake.lhs file"
+gObj ∷ [String] → FilePath → IO () → IO ()
+gObj [] arg buildAction = do
+  currentObjects ← readIORef objects
+  currentObjectList ← readIORef objectsList
+  let new = (arg, buildAction) : currentObjects
+  writeIORef objectsList (arg : currentObjectList)
+  writeIORef objects new
+gObj deps arg complexBuildAction = do
+  myPhonyActions ← readIORef phonyActions
+  myObjects      ← readIORef objects
+  myObjectList   ← readIORef objectsList
+  forM_ deps $ \dep → do
+    forM_ myObjects $ \(file, buildAction) →
+      when (dep == file) $
+        compileObj file buildAction
+    forM_ myPhonyActions $ \(rule, phonyAction, _) →
+      when (dep == rule) $ compilePhony rule phonyAction
+  let new = (arg, complexBuildAction) : myObjects
+  writeIORef objectsList (arg : myObjectList)
+  writeIORef objects new
 
-hakeItF ∷ [String]
-         → String   -- current directory
-         → Bool     -- force
-         → Bool     -- pretend
-         → String   -- platform
-         → String   -- hake file
-         → IO ()
-hakeItF args dir force pretend platform hakefile = do
-#if ( defined(mingw32_HOST_OS) || defined(__MINGW32__) )
-  -- on Windows GHC is not possibly in path (specially with stack)
-  -- however we can look for it inside stack packages
-  ghcCommand ← getGHC
-#else
-  let ghcCommand = "ghc"
-#endif
-  let cscr = if | platform ∈ ["Win_x64", "Win"] → "hake.exe"
-                | otherwise → "hake"
+-- operators
+infixl 5 ◉
+-- even >>= will have 1 priority and $ have priority 0
+-- to check priority: type ":i >>=" into ghci
+infixl 0 ∰, ∫, #>, ##>, @>, @@>, ♯, ♯♯
 
-  cscrExists  ← doesFileExist cscr
-  doRecompile ←
-    if | force → return True
-       | cscrExists → do
-          scrMTime  ← getMTime hakefile
-          cscrMTime ← getMTime cscr
-          return $ cscrMTime <= scrMTime
-       | otherwise → return True
+-- tuple maker
+(◉) ∷ String → [String] → (String, [String])
+s ◉ ss = (s, ss)
 
-  when doRecompile $ system (ghcCommand ++ " --make -o " ++ cscr ++ " " ++ hakefile)
-                   >>= \case ExitFailure ε → do
-                               hPrint stderr ε
-                               exitFailure
-                             ExitSuccess → return ()
+-- Phony operator
+(@>) ∷ String → IO () → IO ()
+r @> a = phony r a
 
-  -- TODO: filter out all the options
-  let ifForce =
-        if | force → filter (\ο → ο /= "-f"
-                               && ο /= "--force") args
-           | otherwise → args
-      shArgs = filter (not . startswith "--platform") ifForce
+-- Phony' operator
+(@@>) ∷ (String, [String]) → IO () → IO ()
+(r, d) @@> a = phony d r a
 
-  unless pretend $
-    runHake cscr shArgs
+-- Unicode variant of phony
+(∫) ∷ String → IO () → IO ()
+r ∫ a = phony r a
+
+-- Unicode variant of phony'
+(∰) ∷ (String, [String]) → IO () → IO ()
+(r, d) ∰ a = phony d r a
+
+-- Obj operator
+(#>) ∷ String → IO () → IO ()
+r #> a = obj r a
+
+-- Obj' operator
+(##>) ∷ (String, [String]) → IO () → IO ()
+(r, d) ##> a = obj d r a
+
+-- Unicode Obj operator
+(♯) ∷ FilePath → IO () → IO ()
+r ♯ a = obj r a
+
+-- Unicode Obj' operator
+(♯♯) ∷ (FilePath, [String]) → IO () → IO ()
+(r, d) ♯♯ a = obj d r a

@@ -4,7 +4,7 @@
 {-# LANGUAGE RankNTypes     #-}
 {-# LANGUAGE UnicodeSyntax  #-}
 
-import           Hake
+import           HakeScript
 import           Version
 
 import           Foreign.Storable      (sizeOf)
