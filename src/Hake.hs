@@ -62,12 +62,24 @@ hake maybeAction = do
 
 displayHelp ∷ IO ()
 displayHelp = do
-  phonies <- readIORef phonyActions
-  unless (M.null phonies) $ do
+  myPhonies <- readIORef phonyActions
+  myObjects ← readIORef objects
+  unless (M.null myPhonies) $ do
     putStrLn "Current HakeScript options:"
-    let phoniesList = M.toList phonies
+    let phoniesList = M.toList myPhonies
         maxNameLen = maximum $ map (length . fst) phoniesList
-    for_ (reverse $ M.toList phonies) $ \(r, (_, d)) →
+    for_ phoniesList $ \(r, (_, d)) →
       let additionalSpacesCount = maxNameLen - length r
           spaces = replicate additionalSpacesCount ' '
       in putStrLn $ "  " ++ r ++ spaces ++ " :" ++ d
+  unless (M.null myObjects) $ do
+    unless (M.null myPhonies) $ putStrLn []
+    putStrLn "Current HakeScript objects:"
+    let objectsList = M.toList myObjects
+        maxNameLen = maximum $ map (length . fst) objectsList
+    for_ objectsList $ \(r, (_, deps)) →
+      let additionalSpacesCount = maxNameLen - length r
+          spaces = replicate additionalSpacesCount ' '
+      in if S.null deps
+          then putStrLn $ "  " ++ r
+          else putStrLn $ "  " ++ r ++ spaces ++ " :" ++ show (S.toList deps)
