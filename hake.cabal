@@ -1,12 +1,13 @@
 name:           hake
 version:        0.0.1
-license:        LGPL21
+license:        LGPL-2.1
 category:       Development
 
 build-type:     Simple
-cabal-version:  >= 2.0
+cabal-version:  2.0
 
 Library
+  default-language: Haskell2010
   Hs-Source-Dirs: src
   exposed-modules:
       Hake
@@ -25,7 +26,8 @@ Library
     , base-unicode-symbols
 
 Executable    hake
-  Main-Is:    Main.hs
+  default-language: Haskell2010
+  Main-Is: Main.hs
   Hs-Source-Dirs: src
   Other-Modules:
     HakeScript
