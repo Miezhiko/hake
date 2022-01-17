@@ -1,3 +1,5 @@
+[![Haskell CI](https://github.com/Miezhiko/hake/actions/workflows/haskell.yml/badge.svg?branch=mawa)](https://github.com/Miezhiko/hake/actions/workflows/haskell.yml)
+
 <h1 align="center">
   Hake
   <br>
