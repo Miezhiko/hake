@@ -22,7 +22,6 @@ main = hake $ do
   -- install phony depending on obj, @@> is non-unicode operator alternative
   -- ##> or ♯♯ is for dependent object rule, ◉ is just uncarry operator
   "install | install to system" ◉ [hakeExecutable] ∰
-    -- stack ["install"]
     cabal ["install", "--overwrite-policy=always"]
 
   "test | build and test" ◉ [hakeExecutable] ∰
@@ -34,5 +33,6 @@ main = hake $ do
 
        hakeExecutable ∷ String
        hakeExecutable =
+         {- HLINT ignore "Redundant multi-way if" -}
          if | os ∈ ["win32", "mingw32", "cygwin32"] → buildPath </> "hake.exe"
             | otherwise → buildPath </> "hake"
