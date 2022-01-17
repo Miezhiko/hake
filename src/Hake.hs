@@ -23,14 +23,22 @@ import           Data.IORef
 import           Control.Monad
 
 import           Hake.Optional
-import           Hake.Core          as HakeScript
-import           Hake.Lang.Haskell  as HakeScript
+
+import           Hake.Core              as HakeScript
+import           Hake.Lang.Utils        as HakeScript
+import           Hake.Lang.C            as HakeScript
+import           Hake.Lang.Rust         as HakeScript
+import           Hake.Lang.Haskell      as HakeScript
+
+import           Hake.Helper.FileSystem as HakeScript
+import           Hake.Helper.Syntax     as HakeScript
 
 hake ∷ IO () → IO ()
 hake maybeAction = do
   args ← getArgs
   writeIORef phonyArgs args
   maybeAction
+  {- HLINT ignore "Redundant multi-way if" -}
   if | "-h" ∈ args ∨ "--help" ∈ args → displayHelp
      | otherwise → do
         myObjects ← readIORef objects

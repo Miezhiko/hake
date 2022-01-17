@@ -1,7 +1,12 @@
 name:           hake
-version:        0.0.1
+version:        0.0.2
 license:        LGPL-2.1
 category:       Development
+author:         Miezhiko
+maintainer:     Miezhiko <miezhiko@gmail.com>
+synopsis:       Writting scripts.
+description:
+  Writting scripts with depending actions
 
 build-type:     Simple
 cabal-version:  2.0
@@ -16,6 +21,12 @@ Library
       Hake.Optional
       Hake.Core
       Hake.Lang.Haskell
+      Hake.Lang.Utils
+      Hake.Lang.C
+      Hake.Lang.Rust
+      Hake.Lang.Js
+      Hake.Helper.FileSystem
+      Hake.Helper.Syntax
   Build-Depends:
       base
     , process
@@ -39,6 +50,12 @@ Executable    hake
     Hake.Optional
     Hake.Core
     Hake.Lang.Haskell
+    Hake.Lang.Utils
+    Hake.Lang.C
+    Hake.Lang.Rust
+    Hake.Lang.Js
+    Hake.Helper.FileSystem
+    Hake.Helper.Syntax
     Paths_hake
 
   Build-Depends:

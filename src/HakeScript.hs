@@ -106,6 +106,7 @@ hakeItF args dir force pretend platform hakefile = do
 #else
   let ghcCommand = "ghc"
 #endif
+  {- HLINT ignore "Redundant multi-way if" -}
   let cscr = if | platform ∈ ["Win_x64", "Win"] → "hake.exe"
                 | otherwise → "hake"
 

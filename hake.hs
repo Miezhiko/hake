@@ -8,7 +8,7 @@ main = hake $ do
   -- phony clean @> is non-unicode operator alternative
   "clean | clean the project" ∫ do
     stack ["clean"]
-    removeDirectoryRecursive buildPath
+    removeDirIfExists buildPath
 
   -- building object rule #> is non-unicode operator alternative
   hakeExecutable ♯ do
