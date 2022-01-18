@@ -6,12 +6,11 @@ import Hake
 main ∷ IO ()
 main = hake $ do
   -- phony clean @> is non-unicode operator alternative
-  "clean | clean the project" ∫ do
-    stack ["clean"]
-    removeDirIfExists buildPath
+  "clean | clean the project" ∫
+    stack ["clean"] >> removeDirIfExists buildPath
 
   -- building object rule #> is non-unicode operator alternative
-  hakeExecutable ♯ do
+  hakeExecutable ♯
     stack ["--local-bin-path", buildPath, "--copy-bins", "build"]
 
   "cabal | build using cabal" ∫ do
@@ -28,11 +27,12 @@ main = hake $ do
     rawSystem hakeExecutable ["--version"]
       >>= checkExitCode
 
- where buildPath ∷ String
-       buildPath = "dist-newstyle"
+ where 
+  buildPath ∷ String
+  buildPath = "dist-newstyle"
 
-       hakeExecutable ∷ String
-       hakeExecutable =
-         {- HLINT ignore "Redundant multi-way if" -}
-         if | os ∈ ["win32", "mingw32", "cygwin32"] → buildPath </> "hake.exe"
-            | otherwise → buildPath </> "hake"
+  hakeExecutable ∷ String
+  hakeExecutable =
+    {- HLINT ignore "Redundant multi-way if" -}
+    if | os ∈ ["win32", "mingw32", "cygwin32"] → buildPath </> "hake.exe"
+       | otherwise → buildPath </> "hake"

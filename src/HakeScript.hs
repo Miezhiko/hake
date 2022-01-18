@@ -77,12 +77,11 @@ hakeIt ∷ [String]
         → String  -- current directory
         → Bool    -- force
         → Bool    -- pretend
-        → String  -- platform
         → IO ()
-hakeIt args current force pretend platform = do
+hakeIt args current force pretend = do
   let fullNamelhs = current </> "hake.lhs"
       fullNamehs  = current </> "hake.hs"
-      hakeHake  = hakeItF args current force pretend platform
+      hakeHake  = hakeItF args current force pretend
   existslhs ← doesFileExist fullNamelhs
   existshs  ← doesFileExist fullNamehs
   if | existslhs → hakeHake fullNamelhs
@@ -95,10 +94,9 @@ hakeItF ∷ [String]
          → String   -- current directory
          → Bool     -- force
          → Bool     -- pretend
-         → String   -- platform
          → String   -- hake file
          → IO ()
-hakeItF args dir force pretend platform hakefile = do
+hakeItF args dir force pretend hakefile = do
 #if ( defined(mingw32_HOST_OS) || defined(__MINGW32__) )
   -- on Windows GHC is not possibly in path (specially with stack)
   -- however we can look for it inside stack packages
@@ -107,7 +105,7 @@ hakeItF args dir force pretend platform hakefile = do
   let ghcCommand = "ghc"
 #endif
   {- HLINT ignore "Redundant multi-way if" -}
-  let cscr = if | platform ∈ ["Win_x64", "Win"] → "hake.exe"
+  let cscr = if | os ∈ ["win32", "mingw32", "cygwin32"] → "hake.exe"
                 | otherwise → "hake"
 
   cscrExists  ← doesFileExist cscr
@@ -126,11 +124,10 @@ hakeItF args dir force pretend platform hakefile = do
                              ExitSuccess → return ()
 
   -- TODO: filter out all the options
-  let ifForce =
+  let shArgs =
         if | force → filter (\ο → ο /= "-f"
                                && ο /= "--force") args
            | otherwise → args
-      shArgs = filter (not . startswith "--platform") ifForce
 
   unless pretend $
     runHake cscr shArgs
