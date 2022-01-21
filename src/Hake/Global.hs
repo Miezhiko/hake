@@ -4,7 +4,7 @@
 
 module Hake.Global
   ( objects
-  , objectsList
+  , objectsSet
   , phonyActions
   , phonyArgs
   ) where
@@ -12,19 +12,24 @@ module Hake.Global
 import           System.IO.Unsafe
 
 import           Data.IORef
+import qualified Data.Set         as S
 
+-- command line arguments
 phonyArgs ∷ IORef [String]
 {-# NOINLINE phonyArgs #-}
 phonyArgs = unsafePerformIO     $ newIORef []
 
+-- parsed phony actions to use with arguments
 phonyActions ∷ IORef [(String, IO (), String)]
 {-# NOINLINE phonyActions #-}
 phonyActions = unsafePerformIO  $ newIORef []
 
+-- parsed objects
 objects ∷ IORef [(String, IO ())]
 {-# NOINLINE objects #-}
 objects = unsafePerformIO       $ newIORef []
 
-objectsList ∷ IORef [String]
-{-# NOINLINE objectsList #-}
-objectsList = unsafePerformIO   $ newIORef []
+-- helper set of objects for small runtime optimization
+objectsSet ∷ IORef (S.Set String)
+{-# NOINLINE objectsSet #-}
+objectsSet = unsafePerformIO   $ newIORef S.empty

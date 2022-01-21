@@ -20,7 +20,7 @@ import           Control.Monad
 main ∷ IO ()
 main = do
   hakeArgs ← getArgs
-  current   ← getCurrentDirectory
+  current  ← getCurrentDirectory
   let (actions, _, _) = getOpt RequireOrder hakeOptions hakeArgs
   Options { optForce    = force
           , optPretend  = test

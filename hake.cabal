@@ -1,5 +1,5 @@
 name:           hake
-version:        0.0.7
+version:        0.0.8
 license:        LGPL-2.1
 category:       Development
 author:         Miezhiko
@@ -41,6 +41,7 @@ Library
     , time
     , base-unicode-symbols
     , MissingH
+    , containers
   ghc-options:
     -Wall
 
@@ -79,6 +80,7 @@ Executable    hake
     , filepath
     , time
     , MissingH
+    , containers
     , hake
     , base-unicode-symbols
 

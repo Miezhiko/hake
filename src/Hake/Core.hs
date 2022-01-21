@@ -25,6 +25,7 @@ import           System.Process     as SystemImports
 
 import           Data.IORef
 import           Data.List.Split
+import qualified Data.Set           as S
 import           Data.String.Utils  (strip)
 
 import           Control.Monad
@@ -62,8 +63,8 @@ compilePhony rule phonyAction = do
 
 compileObj ∷ String → IO () → IO ()
 compileObj file buildAction = do
-  currentObjectList ← readIORef objectsList
-  when (file ∈ currentObjectList) $ do
+  currentObjectList ← readIORef objectsSet
+  when (S.member file currentObjectList) $ do
     currentDir ← getCurrentDirectory
     let fullPath = currentDir </> file
     buildAction -- building this file

@@ -13,6 +13,7 @@ module Hake.Syntax
 
 import           Data.Foldable (for_)
 import           Data.IORef
+import qualified Data.Set      as S
 
 import           Control.Monad
 
@@ -58,14 +59,14 @@ obj = opt1 gObj []
 gObj ∷ [String] → FilePath → IO () → IO ()
 gObj [] arg buildAction = do
   currentObjects ← readIORef objects
-  currentObjectList ← readIORef objectsList
+  currentObjectList ← readIORef objectsSet
   let new = (arg, buildAction) : currentObjects
-  writeIORef objectsList (arg : currentObjectList)
+  writeIORef objectsSet (S.insert arg currentObjectList)
   writeIORef objects new
 gObj deps arg complexBuildAction = do
   myPhonyActions ← readIORef phonyActions
   myObjects      ← readIORef objects
-  myObjectList   ← readIORef objectsList
+  myObjectList   ← readIORef objectsSet
   for_ deps $ \dep → do
     for_ myObjects $ \(file, buildAction) →
       when (dep == file) $
@@ -73,5 +74,5 @@ gObj deps arg complexBuildAction = do
     for_ myPhonyActions $ \(rule, phonyAction, _) →
       when (dep == rule) $ compilePhony rule phonyAction
   let new = (arg, complexBuildAction) : myObjects
-  writeIORef objectsList (arg : myObjectList)
+  writeIORef objectsSet (S.insert arg myObjectList)
   writeIORef objects new
