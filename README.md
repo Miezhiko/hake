@@ -29,6 +29,8 @@
 
 import Hake
 
+import Data.List (intercalate)
+
 main ∷ IO ()
 main = hake $ do
 
@@ -56,11 +58,13 @@ main = hake $ do
   buildPath ∷ FilePath
   buildPath = targetPath </> "release"
 
-  features ∷ String
-  features = "trackers,torch"
+  features ∷ [String]
+  features = [ "trackers"
+             , "torch" ]
 
   buildFlags ∷ [String]
-  buildFlags = ["--release", "--features", features]
+  buildFlags = [ "--release", "--features"
+               , intercalate "," features ]
 
   amadeusExecutable ∷ FilePath
   amadeusExecutable =

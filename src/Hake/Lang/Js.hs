@@ -6,14 +6,13 @@ module Hake.Lang.Js
     , vue
     ) where
 
-import           Control.Monad
-import           Hake.Core
+import Hake.Common
 
 npm ∷ [String] → IO ()
-npm α = rawSystem "npm" α >>= checkExitCode
+npm = raw "npm"
 
 yarn ∷ [String] → IO ()
-yarn α = rawSystem "yarn" α >>= checkExitCode
+yarn = raw "yarn"
 
 vue ∷ [String] → IO ()
-vue α = rawSystem "vue" α >>= checkExitCode
+vue = raw "vue"

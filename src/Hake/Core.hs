@@ -24,6 +24,7 @@ import           System.Process     as SystemImports
 import           Data.Char          (isSpace)
 import           Data.IORef
 import           Data.List.Split
+import           Data.String.Utils  (strip)
 
 import           Control.Monad
 
@@ -33,22 +34,12 @@ exitWithError ∷ String → IO ()
 exitWithError μ = do putStrLn $ "Error: " ++ μ
                      exitFailure
 
-trim ∷ String → String
-trim xs = dropSpaceTail "" $ dropWhile isSpace xs
-
-dropSpaceTail ∷ String → String → String
-dropSpaceTail _ "" = ""
-dropSpaceTail maybeStuff (χ:xs)
-  | isSpace χ       = dropSpaceTail (χ:maybeStuff) xs
-  | null maybeStuff = χ : dropSpaceTail "" xs
-  | otherwise       = reverse maybeStuff ++ χ : dropSpaceTail "" xs
-
 nameAndDesc ∷ String → (String, String)
 nameAndDesc χ =
   let splt = splitOn "|" χ
   in if length splt > 1
-      then (trim (head splt), last splt)
-      else (trim χ, "No description")
+      then (strip (head splt), last splt)
+      else (strip χ, "No description")
 
 checkExitCode ∷ ExitCode → IO ()
 checkExitCode ExitSuccess = return ()
@@ -65,9 +56,8 @@ compilePhony ∷ String → IO () → IO ()
 compilePhony rule phonyAction = do
   phonyAction
   myPhonyArgs ← readIORef phonyArgs
-  when (rule ∈ myPhonyArgs) $ do
-    removePhonyArg myPhonyArgs rule
-    return ()
+  when (rule ∈ myPhonyArgs) $
+    void $ removePhonyArg myPhonyArgs rule
 
 compileObj ∷ String → IO () → IO ()
 compileObj file buildAction = do

@@ -9,11 +9,10 @@ module Hake.Lang.C
   , qmake
   ) where
 
-import           Control.Monad
-import           Hake.Core
+import Hake.Common
 
 cmake ∷ [String] → IO ()
-cmake a = rawSystem "cmake" a >>= checkExitCode
+cmake = raw "cmake"
 
 cmakeBuild ∷ [String] → IO ()
 cmakeBuild α = rawSystem "cmake" ("--build" : α) >>= checkExitCode
@@ -40,4 +39,4 @@ nmake   _ = return ()
 #endif
 
 qmake ∷ [String] → IO ()
-qmake α = rawSystem "qmake" α >>= checkExitCode
+qmake = raw "qmake"

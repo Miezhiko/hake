@@ -5,11 +5,10 @@ module Hake.Lang.Rust
     , rustc
     ) where
 
-import           Control.Monad
-import           Hake.Core
+import Hake.Common
 
 cargo ∷ [String] → IO ()
-cargo α = rawSystem "cargo" α >>= checkExitCode
+cargo = raw "cargo"
 
 rustc ∷ [String] → IO ()
-rustc α = rawSystem "rustc" α >>= checkExitCode
+rustc = raw "rustc"

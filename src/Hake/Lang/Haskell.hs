@@ -6,14 +6,13 @@ module Hake.Lang.Haskell
     , stack
     ) where
 
-import           Control.Monad
-import           Hake.Core
+import Hake.Common
 
 ghc ∷ [String] → IO ()
-ghc α = rawSystem "ghc" α >>= checkExitCode
+ghc = raw "ghc"
 
 cabal ∷ [String] → IO ()
-cabal α = rawSystem "cabal" α >>= checkExitCode
+cabal = raw "cabal"
 
 stack ∷ [String] → IO ()
-stack α = rawSystem "stack" α >>= checkExitCode
+stack = raw "stack"

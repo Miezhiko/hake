@@ -4,7 +4,6 @@
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE MultiWayIf            #-}
-{-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE RankNTypes            #-}
 {-# LANGUAGE UnicodeSyntax         #-}
 
@@ -15,7 +14,7 @@ module Hake
   , (#>), (@>), (##>), (@@>)
   , (♯), (♯♯)
   , (∫), (∰)
-  , module HakeScript
+  , module HakeLib
   ) where
 
 import           Data.IORef
@@ -24,14 +23,15 @@ import           Control.Monad
 
 import           Hake.Optional
 
-import           Hake.Core              as HakeScript
-import           Hake.Lang.Utils        as HakeScript
-import           Hake.Lang.C            as HakeScript
-import           Hake.Lang.Rust         as HakeScript
-import           Hake.Lang.Haskell      as HakeScript
+import           Hake.Core              as HakeLib
 
-import           Hake.Helper.FileSystem as HakeScript
-import           Hake.Helper.Syntax     as HakeScript
+import           Hake.Lang.Utils        as HakeLib
+import           Hake.Lang.C            as HakeLib
+import           Hake.Lang.Rust         as HakeLib
+import           Hake.Lang.Haskell      as HakeLib
+
+import           Hake.Helper.FileSystem as HakeLib
+import           Hake.Helper.Syntax     as HakeLib
 
 hake ∷ IO () → IO ()
 hake maybeAction = do

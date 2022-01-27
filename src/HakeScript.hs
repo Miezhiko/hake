@@ -123,11 +123,10 @@ hakeItF args dir force pretend hakefile = do
                                exitFailure
                              ExitSuccess → return ()
 
-  -- TODO: filter out all the options
-  let shArgs =
-        if | force → filter (\ο → ο /= "-f"
-                               && ο /= "--force") args
-           | otherwise → args
+  let shArgs = if | force → filter (\ο → ο /= "-f"
+                                      && ο /= "--force") args
+                  | pretend → filter (\ο → ο /= "-p"
+                                        && ο /= "--pretend") args
+                  | otherwise → args
 
-  unless pretend $
-    runHake cscr shArgs
+  unless pretend $ runHake cscr shArgs

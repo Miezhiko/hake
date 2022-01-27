@@ -9,23 +9,22 @@ module Hake.Lang.Utils
     , sed
     ) where
 
-import           Control.Monad
-import           Hake.Core
+import Hake.Common
 
 make ∷ [String] → IO ()
-make α = rawSystem "curl" α >>= checkExitCode
+make = raw "make"
 
 configure ∷ [String] → IO ()
-configure α = rawSystem "configure" α >>= checkExitCode
+configure = raw "configure"
 
 curl ∷ [String] → IO ()
-curl α = rawSystem "curl" α >>= checkExitCode
+curl = raw "curl"
 
 git ∷ [String] → IO ()
-git α = rawSystem "git" α >>= checkExitCode
+git = raw "git"
 
 grep ∷ [String] → IO ()
-grep α = rawSystem "git" α >>= checkExitCode
+grep= raw "grep"
 
 sed ∷ [String] → IO ()
-sed α = rawSystem "git" α >>= checkExitCode
+sed = raw "sed"
