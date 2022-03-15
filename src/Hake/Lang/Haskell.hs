@@ -5,6 +5,7 @@ module Hake.Lang.Haskell
     , cabal
     , stack
     , cleanCabalLocal
+    , getCabalBuildPath
     ) where
 
 import Hake.Common
@@ -31,8 +32,8 @@ cleanCabalLocal =
                       >>= traverse_ removeIfExists
        . filter (isPrefixOf "cabal.project.local")
 
-getCabalAppName ∷ String → IO String
-getCabalAppName appName = do
+getCabalBuildPath ∷ String → IO String
+getCabalBuildPath appName = do
   (exitCode, stdOut, stdErr) ←
       readProcessWithExitCode "cabal" ["list-bin", appName] []
   if exitCode == ExitSuccess 
