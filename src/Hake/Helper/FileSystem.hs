@@ -8,7 +8,7 @@ module Hake.Helper.FileSystem
   ) where
 
 import           Control.Exception
-import           Control.Monad          (forM_)
+import           Data.Foldable          (for_)
 import           Prelude                hiding (catch)
 import           Prelude.Unicode
 import           System.Directory
@@ -29,14 +29,14 @@ removeDirIfExists δ = removeDirectoryRecursive δ `catch` handleExists
           | otherwise = throwIO ε
 
 copyDir ∷ FilePath -- source
-         → FilePath -- destination
-         → IO ()
+        → FilePath -- destination
+        → IO ()
 copyDir src dst = do
   createDirectory dst
   content ← getDirectoryContents src
   let xs = filter (∉ [".", ".."]) content
-  forM_ xs $ \name → let srcPath = src </> name
-                         dstPath = dst </> name
+  for_ xs $ \name → let srcPath = src </> name
+                        dstPath = dst </> name
       in doesDirectoryExist srcPath >>= \dirExist →
           if dirExist then copyDir srcPath dstPath
                       else copyFile srcPath dstPath

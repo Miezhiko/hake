@@ -18,6 +18,7 @@ module Hake
   ) where
 
 import           Data.IORef
+import           Data.Foldable (for_)
 
 import           Control.Monad
 
@@ -42,7 +43,7 @@ hake maybeAction = do
   if | "-h" ∈ args ∨ "--help" ∈ args → displayHelp
      | otherwise → do
         myObjects ← readIORef objects
-        forM_ myObjects $ uncurry compileObj
+        for_ myObjects $ uncurry compileObj
 
 displayHelp ∷ IO ()
 displayHelp = do
@@ -51,7 +52,7 @@ displayHelp = do
     [] -> return ()
     xs -> do
       putStrLn "HakeScript options:"
-      forM_ (reverse xs) $ \(r, _, d) →
+      for_ (reverse xs) $ \(r, _, d) →
         putStrLn $ "  " ++ r ++ " :" ++ d
 
 phony :: (Optional1 [String] (String → IO () → IO ()) r) ⇒ r
@@ -75,11 +76,11 @@ gPhony deps arg complexPhonyAction = do
   if an ∈ myPhonyArgs
     then do
       myObjects ← readIORef objects
-      forM_ deps $ \dep → do
-        forM_ myObjects $ \(file, buildAction) →
+      for_ deps $ \dep → do
+        for_ myObjects $ \(file, buildAction) →
           when (dep == file) $
             compileObj file buildAction
-        forM_ myPhonyActions $ \(rule, phonyAction, _) →
+        for_ myPhonyActions $ \(rule, phonyAction, _) →
           when (dep == rule) $ compilePhony rule phonyAction
       complexPhonyAction
       filtered ← removePhonyArg myPhonyArgs an
@@ -101,11 +102,11 @@ gObj deps arg complexBuildAction = do
   myPhonyActions ← readIORef phonyActions
   myObjects      ← readIORef objects
   myObjectList   ← readIORef objectsList
-  forM_ deps $ \dep → do
-    forM_ myObjects $ \(file, buildAction) →
+  for_ deps $ \dep → do
+    for_ myObjects $ \(file, buildAction) →
       when (dep == file) $
         compileObj file buildAction
-    forM_ myPhonyActions $ \(rule, phonyAction, _) →
+    for_ myPhonyActions $ \(rule, phonyAction, _) →
       when (dep == rule) $ compilePhony rule phonyAction
   let new = (arg, complexBuildAction) : myObjects
   writeIORef objectsList (arg : myObjectList)
