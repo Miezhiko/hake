@@ -22,10 +22,11 @@ Library
       Hake.Core
       Hake.Common
       Hake.Lang.Haskell
-      Hake.Lang.Utils
       Hake.Lang.C
       Hake.Lang.Rust
       Hake.Lang.Js
+      Hake.Helper.Utils
+      Hake.Helper.Systemd
       Hake.Helper.FileSystem
       Hake.Helper.Syntax
   Build-Depends:
@@ -53,10 +54,11 @@ Executable    hake
     Hake.Core
     Hake.Common
     Hake.Lang.Haskell
-    Hake.Lang.Utils
     Hake.Lang.C
     Hake.Lang.Rust
     Hake.Lang.Js
+    Hake.Helper.Utils
+    Hake.Helper.Systemd
     Hake.Helper.FileSystem
     Hake.Helper.Syntax
     Paths_hake
