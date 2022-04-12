@@ -39,11 +39,15 @@ main = hake $ do
 
   "update | update dependencies" ∫ cargo ["update"]
 
-  amadeusExecutable ♯
-    cargo <| "build" : buildFlags
+  salieriExecutable ♯
+    cargo <| "build" : buildFlagsSalieri
 
-  "install | install to system" ◉ [amadeusExecutable] ∰
-    cargo <| "install" : buildFlags
+  amadeusExecutable ♯
+    cargo <| "build" : buildFlagsAmadeus
+
+  "install | install to system" ◉ [ salieriExecutable
+                                  , amadeusExecutable ] ∰
+    cargo <| "install" : buildFlagsAmadeus
 
   "test | build and test" ◉ [amadeusExecutable] ∰ do
     cargo ["test"]
@@ -51,7 +55,18 @@ main = hake $ do
     rawSystem amadeusExecutable ["--version"]
       >>= checkExitCode
 
+  "restart | restart services" ◉ [ salieriExecutable
+                                 , amadeusExecutable ] ∰ do
+    systemctl ["restart", appNameSalieri]
+    systemctl ["restart", appNameAmadeus]
+
  where
+  appNameSalieri ∷ String
+  appNameSalieri = "salieri"
+
+  appNameAmadeus ∷ String
+  appNameAmadeus = "amadeus"
+
   targetPath ∷ FilePath
   targetPath = "target"
 
@@ -62,15 +77,25 @@ main = hake $ do
   features = [ "trackers"
              , "torch" ]
 
-  buildFlags ∷ [String]
-  buildFlags = [ "--release", "--features"
-               , intercalate "," features ]
+  buildFlagsSalieri ∷ [String]
+  buildFlagsSalieri = [ "-p", appNameSalieri, "--release" ]
+
+  buildFlagsAmadeus ∷ [String]
+  buildFlagsAmadeus = [ "-p", appNameAmadeus
+                      , "--release", "--features"
+                      , intercalate "," features ]
+
+  salieriExecutable ∷ FilePath
+  salieriExecutable =
+    {- HLINT ignore "Redundant multi-way if" -}
+    if | os ∈ ["win32", "mingw32", "cygwin32"] → buildPath </> appNameSalieri ++ ".exe"
+       | otherwise → buildPath </> appNameSalieri
 
   amadeusExecutable ∷ FilePath
   amadeusExecutable =
     {- HLINT ignore "Redundant multi-way if" -}
-    if | os ∈ ["win32", "mingw32", "cygwin32"] → buildPath </> "amadeus.exe"
-       | otherwise → buildPath </> "amadeus"
+    if | os ∈ ["win32", "mingw32", "cygwin32"] → buildPath </> appNameAmadeus ++ ".exe"
+       | otherwise → buildPath </> appNameAmadeus
 ```
 
 ## Usage
