@@ -1,6 +1,6 @@
 {-# LANGUAGE UnicodeSyntax #-}
 
-module Hake.Lang.Utils
+module Hake.Helper.Utils
     ( make
     , configure
     , curl
