@@ -42,7 +42,7 @@ main = hake $ do
   salieriExecutable ♯
     cargo <| "build" : buildFlagsSalieri
 
-  amadeusExecutable ♯
+  amadeusExecutable ◉ [salieriExecutable] ♯♯
     cargo <| "build" : buildFlagsAmadeus
 
   "install | install to system" ◉ [ salieriExecutable
