@@ -34,7 +34,7 @@ import           Hake.Helper.Syntax     as HakeLib
 import           Hake.Lang.C            as HakeLib
 import           Hake.Lang.Rust         as HakeLib
 import           Hake.Lang.Haskell      as HakeLib
-import           Hake.Lang.Idris        as HakeLib
+import           Hake.Lang.Idris2       as HakeLib
 
 hake ∷ IO () → IO ()
 hake maybeAction = do
