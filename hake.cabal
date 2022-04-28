@@ -25,6 +25,7 @@ Library
       Hake.Lang.C
       Hake.Lang.Rust
       Hake.Lang.Js
+      Hake.Lang.Idris
       Hake.Helper.Utils
       Hake.Helper.Systemd
       Hake.Helper.FileSystem
@@ -57,6 +58,7 @@ Executable    hake
     Hake.Lang.C
     Hake.Lang.Rust
     Hake.Lang.Js
+    Hake.Lang.Idris
     Hake.Helper.Utils
     Hake.Helper.Systemd
     Hake.Helper.FileSystem
