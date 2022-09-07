@@ -1,5 +1,5 @@
 name:           hake
-version:        0.0.5
+version:        0.0.6
 license:        LGPL-2.1
 category:       Development
 author:         Miezhiko
@@ -17,6 +17,8 @@ Library
   exposed-modules:
       Hake
   Other-Modules:
+      Hake.Syntax
+      Hake.Operators
       Hake.Global
       Hake.Optional
       Hake.Core
@@ -39,6 +41,8 @@ Library
     , time
     , base-unicode-symbols
     , MissingH
+  ghc-options:
+    -Wall
 
 Executable    hake
   default-language: Haskell2010
@@ -50,6 +54,8 @@ Executable    hake
     Script
 
     Hake
+    Hake.Syntax
+    Hake.Operators
     Hake.Global
     Hake.Optional
     Hake.Core

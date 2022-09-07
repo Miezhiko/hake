@@ -7,9 +7,9 @@ module Hake.Global
   , objectsList
   ) where
 
-import System.IO.Unsafe
+import           System.IO.Unsafe
 
-import Data.IORef
+import           Data.IORef
 
 phonyArgs ∷ IORef [String]
 {-# NOINLINE phonyArgs #-}

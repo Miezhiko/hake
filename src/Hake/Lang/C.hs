@@ -9,7 +9,7 @@ module Hake.Lang.C
   , qmake
   ) where
 
-import Hake.Common
+import           Hake.Common
 
 cmake ∷ [String] → IO ()
 cmake = raw "cmake"

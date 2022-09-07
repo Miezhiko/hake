@@ -1,7 +1,7 @@
 {-# LANGUAGE MultiWayIf    #-}
 {-# LANGUAGE UnicodeSyntax #-}
 
-import Hake
+import           Hake
 
 main ∷ IO ()
 main = hake $ do

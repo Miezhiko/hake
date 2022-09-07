@@ -9,7 +9,7 @@ module Hake.Helper.Utils
     , sed
     ) where
 
-import Hake.Common
+import           Hake.Common
 
 make ∷ [String] → IO ()
 make = raw "make"

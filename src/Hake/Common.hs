@@ -5,7 +5,7 @@ module Hake.Common
   , module Hake.Core
   ) where
 
-import Hake.Core
+import           Hake.Core
 
 raw ∷ String -> [String] → IO ()
 raw λ α = rawSystem λ α >>= checkExitCode

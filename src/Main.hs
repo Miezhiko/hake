@@ -1,4 +1,3 @@
-{-# LANGUAGE CPP            #-}
 {-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE RankNTypes     #-}
 {-# LANGUAGE UnicodeSyntax  #-}
@@ -27,8 +26,8 @@ main = do
   hakeIt hakeArgs current force test
 
 data Options = Options
-  { optForce    ∷ Bool
-  , optPretend  ∷ Bool
+  { optForce   ∷ Bool
+  , optPretend ∷ Bool
   }
 
 defaultOptions ∷ Options

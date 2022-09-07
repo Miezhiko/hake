@@ -1,22 +1,21 @@
 {-# LANGUAGE CPP           #-}
 {-# LANGUAGE LambdaCase    #-}
 {-# LANGUAGE MultiWayIf    #-}
-{-# LANGUAGE RankNTypes    #-}
 {-# LANGUAGE UnicodeSyntax #-}
 
 module HakeScript
-  ( hakeIt
+  ( module Hake
+  , hakeIt
   , hakeItF
-  , module Hake
   ) where
 
-import           Script
 import           Hake
+import           Script
 
 import           System.IO
 
-import           Data.String.Utils
 import           Data.Maybe
+import           Data.String.Utils
 
 import           Control.Concurrent
 import           Control.Exception
@@ -106,7 +105,7 @@ hakeItF args dir force pretend hakefile = do
 #endif
   {- HLINT ignore "Redundant multi-way if" -}
   let cscr = if | os ∈ ["win32", "mingw32", "cygwin32"] → "hake.exe"
-                | otherwise → "hake"
+                | otherwise                             → "hake"
 
   cscrExists  ← doesFileExist cscr
   doRecompile ←

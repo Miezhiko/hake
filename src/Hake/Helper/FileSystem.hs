@@ -2,19 +2,18 @@
 {-# LANGUAGE UnicodeSyntax #-}
 
 module Hake.Helper.FileSystem
-  ( removeIfExists
+  ( copyDir
   , removeDirIfExists
-  , copyDir
+  , removeIfExists
   ) where
 
 import           Control.Exception
-import           Data.Foldable          (for_)
-import           Prelude                hiding (catch)
+import           Data.Foldable     (for_)
 import           Prelude.Unicode
 import           System.Directory
-import           System.IO.Error        hiding (catch)
+import           System.IO.Error   (isDoesNotExistError)
 
-import           System.FilePath        ((</>))
+import           System.FilePath   ((</>))
 
 removeIfExists ∷ FilePath → IO ()
 removeIfExists ζ = removeFile ζ `catch` handleExists

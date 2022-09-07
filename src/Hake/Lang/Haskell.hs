@@ -8,12 +8,12 @@ module Hake.Lang.Haskell
     , getCabalBuildPath
     ) where
 
-import Hake.Common
+import           Hake.Common
 
-import Hake.Helper.FileSystem (removeIfExists)
-import Data.List              (isPrefixOf)
-import Data.Foldable          (traverse_)
-import Data.String.Utils      (rstrip)
+import           Data.Foldable          (traverse_)
+import           Data.List              (isPrefixOf)
+import           Data.String.Utils      (rstrip)
+import           Hake.Helper.FileSystem (removeIfExists)
 
 ghc ∷ [String] → IO ()
 ghc = raw "ghc"
@@ -34,8 +34,8 @@ cleanCabalLocal =
 
 getCabalBuildPath ∷ String → IO String
 getCabalBuildPath appName = do
-  (exitCode, stdOut, stdErr) ←
+  (exitCode, stdOut, _stdErr) ←
       readProcessWithExitCode "cabal" ["list-bin", appName] []
-  if exitCode == ExitSuccess 
+  if exitCode == ExitSuccess
       then return $ rstrip stdOut
       else return []

@@ -6,7 +6,7 @@ module Hake.Lang.Js
     , vue
     ) where
 
-import Hake.Common
+import           Hake.Common
 
 npm ∷ [String] → IO ()
 npm = raw "npm"

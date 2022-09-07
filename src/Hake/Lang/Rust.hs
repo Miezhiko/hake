@@ -5,7 +5,7 @@ module Hake.Lang.Rust
     , rustc
     ) where
 
-import Hake.Common
+import           Hake.Common
 
 cargo ∷ [String] → IO ()
 cargo = raw "cargo"

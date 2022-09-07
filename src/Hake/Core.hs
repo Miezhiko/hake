@@ -21,7 +21,6 @@ import           System.FilePath    as SystemImports
 import           System.Info        as SystemImports
 import           System.Process     as SystemImports
 
-import           Data.Char          (isSpace)
 import           Data.IORef
 import           Data.List.Split
 import           Data.String.Utils  (strip)
