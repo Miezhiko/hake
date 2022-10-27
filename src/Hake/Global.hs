@@ -1,10 +1,10 @@
 {-# LANGUAGE UnicodeSyntax #-}
 
 module Hake.Global
-  ( phonyArgs
-  , phonyActions
-  , objects
+  ( objects
   , objectsList
+  , phonyActions
+  , phonyArgs
   ) where
 
 import           System.IO.Unsafe

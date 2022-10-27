@@ -10,10 +10,10 @@ module Hake.Helper.FileSystem
 import           Control.Exception
 import           Data.Foldable     (for_)
 import           Prelude.Unicode
-import           System.Directory
-import           System.IO.Error   (isDoesNotExistError)
 
+import           System.Directory
 import           System.FilePath   ((</>))
+import           System.IO.Error   (isDoesNotExistError)
 
 removeIfExists ∷ FilePath → IO ()
 removeIfExists ζ = removeFile ζ `catch` handleExists

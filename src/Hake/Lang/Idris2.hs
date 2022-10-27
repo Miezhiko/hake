@@ -1,8 +1,8 @@
 {-# LANGUAGE UnicodeSyntax #-}
 
 module Hake.Lang.Idris2
-    ( idris2
-    ) where
+  ( idris2
+  ) where
 
 import           Hake.Common
 

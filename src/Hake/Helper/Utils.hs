@@ -1,13 +1,13 @@
 {-# LANGUAGE UnicodeSyntax #-}
 
 module Hake.Helper.Utils
-    ( make
-    , configure
-    , curl
-    , git
-    , grep
-    , sed
-    ) where
+  ( configure
+  , curl
+  , git
+  , grep
+  , make
+  , sed
+  ) where
 
 import           Hake.Common
 

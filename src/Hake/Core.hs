@@ -1,15 +1,15 @@
 {-# LANGUAGE UnicodeSyntax #-}
 
 module Hake.Core
-  ( checkExitCode
+  ( module Hake.Global
+  , module Prelude.Unicode
+  , module SystemImports
+  , checkExitCode
+  , compileObj
+  , compilePhony
   , exitWithError
   , nameAndDesc
   , removePhonyArg
-  , compilePhony
-  , compileObj
-  , module SystemImports
-  , module Prelude.Unicode
-  , module Hake.Global
   ) where
 
 import           Prelude.Unicode

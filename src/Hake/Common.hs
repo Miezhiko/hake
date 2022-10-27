@@ -1,11 +1,11 @@
 {-# LANGUAGE UnicodeSyntax #-}
 
 module Hake.Common
-  ( raw
-  , module Hake.Core
+  ( module Hake.Core
+  , raw
   ) where
 
 import           Hake.Core
 
-raw ∷ String -> [String] → IO ()
+raw ∷ String → [String] → IO ()
 raw λ α = rawSystem λ α >>= checkExitCode

@@ -28,7 +28,7 @@ getMTime ∷ FilePath → IO UTCTime
 getMTime f = getModificationTime f
 #else
 getMTime ∷ FilePath → IO EpochTime
-getMTime f = fmap modificationTime (getFileStatus f)
+getMTime f = modificationTime <$> getFileStatus f
 #endif
 
 runHake ∷ String → [String] → IO ()

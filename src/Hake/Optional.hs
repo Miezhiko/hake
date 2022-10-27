@@ -6,8 +6,8 @@
 {-# LANGUAGE UnicodeSyntax         #-}
 
 module Hake.Optional
-  ( Optional1(..)
-  , Optional2(..)
+  ( Optional1 (..)
+  , Optional2 (..)
   ) where
 
 class Optional1 α β ρ where

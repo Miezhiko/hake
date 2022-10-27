@@ -2,9 +2,9 @@
 {-# LANGUAGE UnicodeSyntax #-}
 
 module Hake.Helper.Syntax
-  ( (<|)
+  ( (<<|)
+  , (<|)
   , (|>)
-  , (<<|)
   , (|>>)
   ) where
 

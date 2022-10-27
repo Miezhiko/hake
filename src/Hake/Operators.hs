@@ -1,10 +1,15 @@
 {-# LANGUAGE UnicodeSyntax #-}
 
 module Hake.Operators
-  ( (◉)
-  , (#>), (@>), (##>), (@@>)
-  , (♯), (♯♯)
-  , (∫), (∰)
+  ( (##>)
+  , (#>)
+  , (@>)
+  , (@@>)
+  , (∫)
+  , (∰)
+  , (◉)
+  , (♯)
+  , (♯♯)
   ) where
 
 import           Hake.Syntax

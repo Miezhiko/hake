@@ -1,12 +1,12 @@
 {-# LANGUAGE UnicodeSyntax #-}
 
 module Hake.Lang.Haskell
-    ( ghc
-    , cabal
-    , stack
-    , cleanCabalLocal
-    , getCabalBuildPath
-    ) where
+  ( cabal
+  , cleanCabalLocal
+  , getCabalBuildPath
+  , ghc
+  , stack
+  ) where
 
 import           Hake.Common
 

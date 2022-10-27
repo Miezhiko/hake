@@ -5,7 +5,8 @@
 {-# LANGUAGE UnicodeSyntax         #-}
 
 module Hake.Syntax
-  ( phony, obj
+  ( obj
+  , phony
   ) where
 
 import           Data.Foldable (for_)
@@ -16,7 +17,7 @@ import           Control.Monad
 import           Hake.Core
 import           Hake.Optional
 
-phony :: (Optional1 [String] (String → IO () → IO ()) r) ⇒ r
+phony ∷ (Optional1 [String] (String → IO () → IO ()) r) ⇒ r
 phony = opt1 gPhony []
 
 gPhony ∷ [String] → String → IO () → IO ()
@@ -31,8 +32,8 @@ gPhony [] arg phonyAction = do
             let new = (an, phonyAction, de) : currentPhony
             writeIORef phonyActions new
 gPhony deps arg complexPhonyAction = do
-  myPhonyArgs ← readIORef phonyArgs
-  myPhonyActions ← readIORef phonyActions
+  myPhonyArgs     ← readIORef phonyArgs
+  myPhonyActions  ← readIORef phonyActions
   let (an, de) = nameAndDesc arg
   if an ∈ myPhonyArgs
     then do
@@ -49,7 +50,7 @@ gPhony deps arg complexPhonyAction = do
     else let new = (an, complexPhonyAction, de) : myPhonyActions
          in writeIORef phonyActions new
 
-obj :: (Optional1 [String] (FilePath → IO () → IO ()) r) ⇒ r
+obj ∷ (Optional1 [String] (FilePath → IO () → IO ()) r) ⇒ r
 obj = opt1 gObj []
 
 gObj ∷ [String] → FilePath → IO () → IO ()

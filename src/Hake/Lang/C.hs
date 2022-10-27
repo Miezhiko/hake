@@ -5,8 +5,8 @@ module Hake.Lang.C
   ( cmake
   , cmakeBuild
   , nmake
-  , vcshell
   , qmake
+  , vcshell
   ) where
 
 import           Hake.Common

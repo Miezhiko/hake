@@ -1,8 +1,8 @@
 {-# LANGUAGE UnicodeSyntax #-}
 
 module Hake.Helper.Systemd
-    ( systemctl
-    ) where
+  ( systemctl
+  ) where
 
 import           Hake.Common
 

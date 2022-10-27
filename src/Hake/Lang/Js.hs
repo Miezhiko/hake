@@ -1,10 +1,10 @@
 {-# LANGUAGE UnicodeSyntax #-}
 
 module Hake.Lang.Js
-    ( npm
-    , yarn
-    , vue
-    ) where
+  ( npm
+  , vue
+  , yarn
+  ) where
 
 import           Hake.Common
 

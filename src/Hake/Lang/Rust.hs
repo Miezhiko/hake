@@ -1,9 +1,9 @@
 {-# LANGUAGE UnicodeSyntax #-}
 
 module Hake.Lang.Rust
-    ( cargo
-    , rustc
-    ) where
+  ( cargo
+  , rustc
+  ) where
 
 import           Hake.Common
 
