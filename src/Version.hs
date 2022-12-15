@@ -1,5 +1,7 @@
-{-# LANGUAGE RankNTypes    #-}
-{-# LANGUAGE UnicodeSyntax #-}
+{-# LANGUAGE
+    RankNTypes
+  , UnicodeSyntax
+  #-}
 
 module Version
   ( printVersion

@@ -1,4 +1,6 @@
-{-# LANGUAGE UnicodeSyntax #-}
+{-# LANGUAGE
+    UnicodeSyntax
+  #-}
 
 module Hake.Lang.Idris2
   ( idris2

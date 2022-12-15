@@ -1,5 +1,7 @@
-{-# LANGUAGE CPP           #-}
-{-# LANGUAGE UnicodeSyntax #-}
+{-# LANGUAGE
+    CPP
+  , UnicodeSyntax
+  #-}
 
 module Hake.Lang.C
   ( cmake

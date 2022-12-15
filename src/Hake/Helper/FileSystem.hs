@@ -1,5 +1,7 @@
-{-# LANGUAGE Safe          #-}
-{-# LANGUAGE UnicodeSyntax #-}
+{-# LANGUAGE
+    Safe
+  , UnicodeSyntax
+  #-}
 
 module Hake.Helper.FileSystem
   ( copyDir

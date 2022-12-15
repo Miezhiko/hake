@@ -1,9 +1,11 @@
-{-# LANGUAGE FlexibleContexts      #-}
-{-# LANGUAGE FlexibleInstances     #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE RankNTypes            #-}
-{-# LANGUAGE Safe                  #-}
-{-# LANGUAGE UnicodeSyntax         #-}
+{-# LANGUAGE
+    FlexibleContexts
+  , FlexibleInstances
+  , MultiParamTypeClasses
+  , RankNTypes
+  , Safe
+  , UnicodeSyntax
+  #-}
 
 module Hake.Optional
   ( Optional1 (..)

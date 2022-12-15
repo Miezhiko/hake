@@ -1,7 +1,9 @@
-{-# LANGUAGE CPP           #-}
-{-# LANGUAGE LambdaCase    #-}
-{-# LANGUAGE MultiWayIf    #-}
-{-# LANGUAGE UnicodeSyntax #-}
+{-# LANGUAGE
+    CPP
+  , LambdaCase
+  , MultiWayIf
+  , UnicodeSyntax
+  #-}
 
 module HakeScript
   ( module Hake
@@ -80,7 +82,7 @@ hakeIt ∷ [String]
 hakeIt args current force pretend = do
   let fullNamelhs = current </> "hake.lhs"
       fullNamehs  = current </> "hake.hs"
-      hakeHake  = hakeItF args current force pretend
+      hakeHake    = hakeItF args current force pretend
   existslhs ← doesFileExist fullNamelhs
   existshs  ← doesFileExist fullNamehs
   if | existslhs → hakeHake fullNamelhs

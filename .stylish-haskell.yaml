@@ -30,7 +30,7 @@ steps:
       separate_lists: true
 
   - language_pragmas:
-      style: vertical
+      style: vertical_compact
       align: true
       remove_redundant: true
       language_prefix: LANGUAGE

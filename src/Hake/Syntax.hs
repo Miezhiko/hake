@@ -1,8 +1,10 @@
-{-# LANGUAGE DataKinds             #-}
-{-# LANGUAGE FlexibleContexts      #-}
-{-# LANGUAGE FlexibleInstances     #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE UnicodeSyntax         #-}
+{-# LANGUAGE
+    DataKinds
+  , FlexibleContexts
+  , FlexibleInstances
+  , MultiParamTypeClasses
+  , UnicodeSyntax
+  #-}
 
 module Hake.Syntax
   ( obj

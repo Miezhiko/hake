@@ -1,4 +1,6 @@
-{-# LANGUAGE UnicodeSyntax #-}
+{-# LANGUAGE
+    UnicodeSyntax
+  #-}
 
 module Hake.Global
   ( objects
@@ -13,16 +15,16 @@ import           Data.IORef
 
 phonyArgs ∷ IORef [String]
 {-# NOINLINE phonyArgs #-}
-phonyArgs = unsafePerformIO (newIORef [])
+phonyArgs = unsafePerformIO     $ newIORef []
 
 phonyActions ∷ IORef [(String, IO (), String)]
 {-# NOINLINE phonyActions #-}
-phonyActions = unsafePerformIO (newIORef [])
+phonyActions = unsafePerformIO  $ newIORef []
 
 objects ∷ IORef [(String, IO ())]
 {-# NOINLINE objects #-}
-objects = unsafePerformIO (newIORef [])
+objects = unsafePerformIO       $ newIORef []
 
 objectsList ∷ IORef [String]
 {-# NOINLINE objectsList #-}
-objectsList = unsafePerformIO (newIORef [])
+objectsList = unsafePerformIO   $ newIORef []

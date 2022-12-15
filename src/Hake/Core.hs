@@ -1,4 +1,6 @@
-{-# LANGUAGE UnicodeSyntax #-}
+{-# LANGUAGE
+    UnicodeSyntax
+  #-}
 
 module Hake.Core
   ( module Hake.Global

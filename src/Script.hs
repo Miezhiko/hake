@@ -1,6 +1,8 @@
-{-# LANGUAGE CPP           #-}
-{-# LANGUAGE RankNTypes    #-}
-{-# LANGUAGE UnicodeSyntax #-}
+{-# LANGUAGE
+    CPP
+  , RankNTypes
+  , UnicodeSyntax
+  #-}
 
 module Script
   ( getMTime
@@ -25,7 +27,7 @@ import           Control.Monad
 
 #if ( defined(mingw32_HOST_OS) || defined(__MINGW32__) )
 getMTime ∷ FilePath → IO UTCTime
-getMTime f = getModificationTime f
+getMTime = getModificationTime
 #else
 getMTime ∷ FilePath → IO EpochTime
 getMTime f = modificationTime <$> getFileStatus f

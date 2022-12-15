@@ -43,4 +43,4 @@ main = hake $ do
        | otherwise → buildPath </> appName
 
   copyExecutable ∷ String → IO ()
-  copyExecutable f = copyFile f hakeExecutable
+  copyExecutable = flip copyFile hakeExecutable

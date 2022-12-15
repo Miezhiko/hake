@@ -1,6 +1,8 @@
-{-# LANGUAGE KindSignatures #-}
-{-# LANGUAGE RankNTypes     #-}
-{-# LANGUAGE UnicodeSyntax  #-}
+{-# LANGUAGE
+    KindSignatures
+  , RankNTypes
+  , UnicodeSyntax
+  #-}
 
 import           HakeScript
 import           Version

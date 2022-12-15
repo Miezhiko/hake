@@ -1,5 +1,8 @@
-{-# LANGUAGE MultiWayIf    #-}
-{-# LANGUAGE UnicodeSyntax #-}
+{-# LANGUAGE
+    LambdaCase
+  , MultiWayIf
+  , UnicodeSyntax
+  #-}
 
 module Hake
   ( module HakeLib
@@ -36,11 +39,10 @@ hake maybeAction = do
         for_ myObjects $ uncurry compileObj
 
 displayHelp ∷ IO ()
-displayHelp = do
-  myPhonyActions ← readIORef phonyActions
-  case myPhonyActions of
-    [] -> return ()
-    xs -> do
-      putStrLn "Current HakeScript options:"
-      for_ (reverse xs) $ \(r, _, d) →
-        putStrLn $ "  " ++ r ++ " :" ++ d
+displayHelp =
+  readIORef phonyActions
+  >>= \case [] -> return ()
+            xs -> do
+              putStrLn "Current HakeScript options:"
+              for_ (reverse xs) $ \(r, _, d) →
+                putStrLn $ "  " ++ r ++ " :" ++ d
