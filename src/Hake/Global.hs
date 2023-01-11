@@ -12,6 +12,7 @@ module Hake.Global
 import           System.IO.Unsafe
 
 import           Data.IORef
+import qualified Data.Map         as M
 import qualified Data.Set         as S
 
 -- command line arguments
@@ -20,14 +21,14 @@ phonyArgs ∷ IORef [String]
 phonyArgs = unsafePerformIO     $ newIORef []
 
 -- parsed phony actions to use with arguments
-phonyActions ∷ IORef [(String, IO (), String)]
+phonyActions ∷ IORef (M.Map String (IO (), String))
 {-# NOINLINE phonyActions #-}
-phonyActions = unsafePerformIO  $ newIORef []
+phonyActions = unsafePerformIO $ newIORef M.empty
 
 -- parsed objects
-objects ∷ IORef [(String, IO ())]
+objects ∷ IORef (M.Map String (IO ()))
 {-# NOINLINE objects #-}
-objects = unsafePerformIO       $ newIORef []
+objects = unsafePerformIO      $ newIORef M.empty
 
 -- helper set of objects for small runtime optimization
 objectsSet ∷ IORef (S.Set String)

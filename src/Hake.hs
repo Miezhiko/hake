@@ -11,6 +11,9 @@ module Hake
 
 import           Data.Foldable          (for_)
 import           Data.IORef
+import qualified Data.Map               as M
+
+import           Control.Monad          (unless)
 
 import           Hake.Core              as HakeLib
 
@@ -36,13 +39,12 @@ hake maybeAction = do
   if | "-h" ∈ args ∨ "--help" ∈ args → displayHelp
      | otherwise → do
         myObjects ← readIORef objects
-        for_ myObjects $ uncurry compileObj
+        for_ (M.toList myObjects) $ uncurry compileObj
 
 displayHelp ∷ IO ()
-displayHelp =
-  readIORef phonyActions
-  >>= \case [] -> return ()
-            xs -> do
-              putStrLn "Current HakeScript options:"
-              for_ (reverse xs) $ \(r, _, d) →
-                putStrLn $ "  " ++ r ++ " :" ++ d
+displayHelp = do
+  phonies <- readIORef phonyActions
+  unless (M.null phonies) $ do
+    putStrLn "Current HakeScript options:"
+    for_ (reverse $ M.toList phonies) $ \(r, (_, d)) →
+      putStrLn $ "  " ++ r ++ " :" ++ d
