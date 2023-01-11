@@ -36,9 +36,9 @@ checkIfSucc           -- check if success
   → IO (Maybe String) -- Just cmd in case of success
 checkIfSucc γ args =
   readCheck γ args
-    ≫= \case Left _ → return Nothing
+    ≫= \case Left _ → pure Nothing
              Right val → do putStr $ γ ⧺ " : " ⧺ val
-                            return (Just γ)
+                            pure $ Just γ
 
 versionCheck          -- check for ghc --version
   ∷ String            -- command to check
@@ -58,20 +58,20 @@ checkForStackGHC γ =
       stackGHV ←
         case ghcPackages of
           [] → do appData ← getEnv("APPDATA")
-                  return $ appData </> "local/bin/ghc.exe"
+                  pure $ appData </> "local/bin/ghc.exe"
           xs → let lastGHC = last xs
-               in return $ path </> lastGHC </> "bin/ghc.exe"
+               in pure $ path </> lastGHC </> "bin/ghc.exe"
       versionCheck stackGHV
-    else return γ
+    else pure γ
 
 getGHC ∷ IO String
-getGHC = return Nothing ≫= λ "ghc"
-                        ≫= checkForStackGHC
-                        ≫= \res → return $ fromMaybe "ghc" res
+getGHC = pure Nothing ≫= λ "ghc"
+                      ≫= checkForStackGHC
+                      ≫= \res → pure $ fromMaybe "ghc" res
   where λ ∷ String → Maybe String → IO (Maybe String)
         λ χ prev = if isNothing prev
                       then versionCheck χ
-                      else return prev
+                      else pure prev
 #endif
 
 hakeIt ∷ [String]
@@ -111,18 +111,18 @@ hakeItF args dir force pretend hakefile = do
 
   cscrExists  ← doesFileExist cscr
   doRecompile ←
-    if | force → return True
+    if | force → pure True
        | cscrExists → do
           scrMTime  ← getMTime hakefile
           cscrMTime ← getMTime cscr
-          return $ cscrMTime <= scrMTime
-       | otherwise → return True
+          pure $ cscrMTime <= scrMTime
+       | otherwise → pure True
 
   when doRecompile $ system (ghcCommand ++ " --make -o " ++ cscr ++ " " ++ hakefile)
                    >>= \case ExitFailure ε → do
                                hPrint stderr ε
                                exitFailure
-                             ExitSuccess → return ()
+                             ExitSuccess → pure ()
 
   let shArgs = if | force → filter (\ο → ο /= "-f"
                                       && ο /= "--force") args

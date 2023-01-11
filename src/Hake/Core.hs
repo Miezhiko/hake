@@ -44,7 +44,7 @@ nameAndDesc χ =
       else (strip χ, "No description")
 
 checkExitCode ∷ ExitCode → IO ()
-checkExitCode ExitSuccess = return ()
+checkExitCode ExitSuccess = pure ()
 checkExitCode (ExitFailure γ) =
     error $ "failed with exit code: " ++ show γ
 
@@ -52,7 +52,7 @@ removePhonyArg ∷ [String] → String → IO [String]
 removePhonyArg args arg = do
   let filtered = filter (/= arg) args
   writeIORef phonyArgs filtered
-  return filtered
+  pure filtered
 
 compilePhony ∷ String → IO () → IO ()
 compilePhony rule phonyAction = do

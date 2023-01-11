@@ -20,13 +20,13 @@ import           System.IO.Error   (isDoesNotExistError)
 removeIfExists ∷ FilePath → IO ()
 removeIfExists ζ = removeFile ζ `catch` handleExists
   where handleExists ε
-          | isDoesNotExistError ε = return ()
+          | isDoesNotExistError ε = pure ()
           | otherwise = throwIO ε
 
 removeDirIfExists ∷ FilePath → IO ()
 removeDirIfExists δ = removeDirectoryRecursive δ `catch` handleExists
   where handleExists ε
-          | isDoesNotExistError ε = return ()
+          | isDoesNotExistError ε = pure ()
           | otherwise = throwIO ε
 
 copyDir ∷ FilePath -- source

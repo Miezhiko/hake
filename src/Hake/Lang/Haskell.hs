@@ -39,5 +39,5 @@ getCabalBuildPath appName = do
   (exitCode, stdOut, _stdErr) ←
       readProcessWithExitCode "cabal" ["list-bin", appName] []
   if exitCode == ExitSuccess
-      then return $ rstrip stdOut
-      else return []
+      then pure $ rstrip stdOut
+      else pure []

@@ -24,7 +24,7 @@ main = do
   let (actions, _, _) = getOpt RequireOrder hakeOptions hakeArgs
   Options { optForce    = force
           , optPretend  = test
-          } ← foldl (>>=) (return defaultOptions) actions
+          } ← foldl (>>=) (pure defaultOptions) actions
   hakeIt hakeArgs current force test
 
 data Options = Options
@@ -50,11 +50,11 @@ forceRebuild ∷ ∀ (m ∷ * → *). Monad m ⇒ Options → m Options
 pretend      ∷ ∀ (m ∷ * → *). Monad m ⇒ Options → m Options
 
 -- note ο is not o but greek ο!
-forceRebuild ο  = return ο { optForce = True }
-pretend ο       = return ο { optPretend = True }
+forceRebuild ο  = pure ο { optForce = True }
+pretend ο       = pure ο { optPretend = True }
 
 displayHelp :: Options → IO Options
 displayHelp ο = do
   prg ← getProgName
   hPutStrLn stderr (usageInfo prg hakeOptions)
-  return ο { optForce = True }
+  pure ο { optForce = True }

@@ -25,19 +25,19 @@ nmake ∷ [String] → IO ()
 #if ( defined(mingw32_HOST_OS) || defined(__MINGW32__) )
 vcshell [x] = do
   common ← getEnv $ "VS" ++ x ++ "COMNTOOLS"
-  return $ common </> ".."  </> ".."
-                  </> "VC"
-                  </> "vcvarsall.bat"
+  pure $ common </> ".."  </> ".."
+                </> "VC"
+                </> "vcvarsall.bat"
 vcshell (x:xs) = do
   vcx ← vcshell [x]
-  if vcx /= [] then return vcx
+  if vcx /= [] then pure vcx
                else vcshell xs
-vcshell []      = return []
+vcshell []      = pure []
 
 nmake α = rawSystem "nmake" α >>= checkExitCode
 #else
-vcshell _ = return []
-nmake   _ = return ()
+vcshell _ = pure []
+nmake   _ = pure ()
 #endif
 
 qmake ∷ [String] → IO ()
