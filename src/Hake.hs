@@ -46,5 +46,9 @@ displayHelp = do
   phonies <- readIORef phonyActions
   unless (M.null phonies) $ do
     putStrLn "Current HakeScript options:"
+    let phoniesList = M.toList phonies
+        maxNameLen = maximum $ map (length . fst) phoniesList
     for_ (reverse $ M.toList phonies) $ \(r, (_, d)) →
-      putStrLn $ "  " ++ r ++ " :" ++ d
+      let additionalSpacesCount = maxNameLen - length r
+          spaces = replicate additionalSpacesCount ' '
+      in putStrLn $ "  " ++ r ++ spaces ++ " :" ++ d
