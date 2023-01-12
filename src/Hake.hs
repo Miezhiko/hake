@@ -85,5 +85,5 @@ displayHelp = do
       in if S.null deps
           then putStrLn $ "  " ++ based
           else let basedObjects    = map takeBaseName (S.toList deps)
-                   basedObjectsStr = "(" ++ intercalate ", " basedObjects ++ ")"
-               in putStrLn $ "  " ++ based ++ spaces ++ " : " ++ basedObjectsStr
+                   basedObjectsStr = intercalate ", " basedObjects
+               in putStrLn $ "  " ++ based ++ spaces ++ " (" ++ basedObjectsStr ++ ")"
