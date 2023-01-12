@@ -114,6 +114,27 @@ main = hake $ do
 
 ## Usage
 
+```bash
+> hake --help
+hake
+  -v  --version  Display Version
+  -h  --help     Display Help
+  -f  --force    force script rebuild
+  -P  --pretend  pretend building (testing hake script)
+
+Current HakeScript options:
+  clean   : clean the project
+  fat     : build Amadeus and Salieri with fat LTO
+  install : install to system
+  restart : restart services
+  test    : build and test
+  update  : update dependencies
+
+Current HakeScript objects:
+  amadeus (salieri)
+  salieri
+```
+
 In root of your project you create file `hake.hs` or `hake.lhs`
 then you run `hake` or `hake clean` or whatever other options you add to the script,
 please use `src/Hake.hs` to learn about all the operators, I will add more examples another time.
