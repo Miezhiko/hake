@@ -11,7 +11,7 @@ module Hake
 
 import           Data.Foldable          (for_)
 import           Data.IORef
-import           Data.List              (sortBy)
+import           Data.List              (intercalate, sortBy)
 import qualified Data.Map               as M
 import qualified Data.Set               as S
 
@@ -77,12 +77,13 @@ displayHelp = do
     unless (M.null myPhonies) $ putStrLn []
     putStrLn "Current HakeScript objects:"
     let objectsList = M.toList myObjects
-        maxNameLen = maximum $ map (length . fst) objectsList
+        maxNameLen  = maximum $ map (length . takeBaseName . fst) objectsList
     for_ objectsList $ \(r, (_, deps)) →
       let based                 = takeBaseName r
           additionalSpacesCount = maxNameLen - length based
           spaces                = replicate additionalSpacesCount ' '
       in if S.null deps
           then putStrLn $ "  " ++ based
-          else let basedObjects = map takeBaseName (S.toList deps)
-               in putStrLn $ "  " ++ based ++ spaces ++ " : " ++ show basedObjects
+          else let basedObjects    = map takeBaseName (S.toList deps)
+                   basedObjectsStr = "(" ++ intercalate ", " basedObjects ++ ")"
+               in putStrLn $ "  " ++ based ++ spaces ++ " : " ++ basedObjectsStr
