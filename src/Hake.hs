@@ -11,10 +11,11 @@ module Hake
 
 import           Data.Foldable          (for_)
 import           Data.IORef
+import           Data.List              (sortBy)
 import qualified Data.Map               as M
 import qualified Data.Set               as S
 
-import           Control.Monad          (unless)
+import           Control.Monad          (unless, when)
 
 import           Hake.Core              as HakeLib
 
@@ -33,30 +34,21 @@ import           Hake.Syntax            as HakeLib
 
 type Object = (String, (IO (), S.Set String))
 
-maxDepsObject ∷ [Object] → Object
-maxDepsObject = foldr1 (\
-  (a1, (b1, d1)) (a2, (b2, d2)) ->
-    if S.size d1 > S.size d2
-      then (a1, (b1, d1))
-      else (a2, (b2, d2)))
-
 buildObjects ∷ [String] → [Object] → IO ()
 buildObjects _ [(f, bd)] = compileObj True f bd
 buildObjects [] objs =
-  let (defaultObjectName, _) = maxDepsObject objs
-  in for_ objs $ \(f, bd) →
-    if f == defaultObjectName
-      then compileObj True f bd
-      else compileObj False f bd
+  let sortedObjects =
+        sortBy (\(_, (_, d1)) (_, (_, d2)) →
+                  compare (S.size d1) (S.size d2)) objs
+  in for_ sortedObjects $ uncurry (compileObj True)
 buildObjects args objs =
   let objectsInArgs = filter ((∈ args) . fst) objs
   in case objectsInArgs of
     [] -> buildObjects [] objs
     xs -> for_ objs $ \(f, bd) →
             let filtereredArgs = map fst xs
-            in if f ∈ filtereredArgs
-              then compileObj True f bd
-              else compileObj False f bd
+            in when (f ∈ filtereredArgs) $
+              compileObj True f bd
 
 hake ∷ IO () → IO ()
 hake maybeAction = do
