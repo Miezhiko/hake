@@ -12,6 +12,7 @@ module Hake
 import           Data.Foldable          (for_)
 import           Data.IORef
 import qualified Data.Map               as M
+import qualified Data.Set               as S
 
 import           Control.Monad          (unless)
 
@@ -30,6 +31,33 @@ import           Hake.Lang.Rust         as HakeLib
 import           Hake.Operators         as HakeLib
 import           Hake.Syntax            as HakeLib
 
+type Object = (String, (IO (), S.Set String))
+
+maxDepsObject ∷ [Object] → Object
+maxDepsObject = foldr1 (\
+  (a1, (b1, d1)) (a2, (b2, d2)) ->
+    if S.size d1 > S.size d2
+      then (a1, (b1, d1))
+      else (a2, (b2, d2)))
+
+buildObjects ∷ [String] → [Object] → IO ()
+buildObjects _ [(f, bd)] = compileObj True f bd
+buildObjects [] objs =
+  let (defaultObjectName, _) = maxDepsObject objs
+  in for_ objs $ \(f, bd) →
+    if f == defaultObjectName
+      then compileObj True f bd
+      else compileObj False f bd
+buildObjects args objs =
+  let objectsInArgs = filter ((∈ args) . fst) objs
+  in case objectsInArgs of
+    [] -> buildObjects [] objs
+    xs -> for_ objs $ \(f, bd) →
+            let filtereredArgs = map fst xs
+            in if f ∈ filtereredArgs
+              then compileObj True f bd
+              else compileObj False f bd
+
 hake ∷ IO () → IO ()
 hake maybeAction = do
   args ← getArgs
@@ -39,7 +67,8 @@ hake maybeAction = do
   if | "-h" ∈ args ∨ "--help" ∈ args → displayHelp
      | otherwise → do
         myObjects ← readIORef objects
-        for_ (M.toList myObjects) $ uncurry (compileObj True)
+        unless (M.null myObjects) $
+          buildObjects args (M.toList myObjects)
 
 displayHelp ∷ IO ()
 displayHelp = do
