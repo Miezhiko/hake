@@ -43,7 +43,7 @@ gPhony deps arg complexPhonyAction = do
     then do
       myObjects ← readIORef objects
       for_ deps $ \dep → do
-        for_ (M.lookup dep myObjects) (compileObj dep)
+        for_ (M.lookup dep myObjects) (compileObj False dep)
         for_ (M.lookup dep myPhonyActions) $ \(phonyAction, _) →
           compilePhony dep phonyAction
       complexPhonyAction
@@ -56,20 +56,9 @@ obj ∷ (Optional1 [String] (FilePath → IO () → IO ()) r) ⇒ r
 obj = opt1 gObj []
 
 gObj ∷ [String] → FilePath → IO () → IO ()
-gObj [] arg buildAction = do
+gObj deps arg buildAction = do
   currentObjects ← readIORef objects
   currentObjectList ← readIORef objectsSet
-  let new = M.insert arg buildAction currentObjects
+  let new = M.insert arg (buildAction, S.fromList deps) currentObjects
   writeIORef objectsSet (S.insert arg currentObjectList)
-  writeIORef objects new
-gObj deps arg complexBuildAction = do
-  myPhonyActions ← readIORef phonyActions
-  myObjects      ← readIORef objects
-  myObjectList   ← readIORef objectsSet
-  for_ deps $ \dep → do
-    for_ (M.lookup dep myObjects) (compileObj dep)
-    for_ (M.lookup dep myPhonyActions) $ \(phonyAction, _) →
-      compilePhony dep phonyAction
-  let new = M.insert arg complexBuildAction myObjects
-  writeIORef objectsSet (S.insert arg myObjectList)
   writeIORef objects new

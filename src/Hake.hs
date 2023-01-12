@@ -39,7 +39,7 @@ hake maybeAction = do
   if | "-h" ∈ args ∨ "--help" ∈ args → displayHelp
      | otherwise → do
         myObjects ← readIORef objects
-        for_ (M.toList myObjects) $ uncurry compileObj
+        for_ (M.toList myObjects) $ uncurry (compileObj True)
 
 displayHelp ∷ IO ()
 displayHelp = do

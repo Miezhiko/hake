@@ -23,8 +23,10 @@ import           System.FilePath    as SystemImports
 import           System.Info        as SystemImports
 import           System.Process     as SystemImports
 
+import           Data.Foldable      (for_)
 import           Data.IORef
 import           Data.List.Split
+import qualified Data.Map           as M
 import qualified Data.Set           as S
 import           Data.String.Utils  (strip)
 
@@ -61,12 +63,24 @@ compilePhony rule phonyAction = do
   when (rule ∈ myPhonyArgs) $
     void $ removePhonyArg myPhonyArgs rule
 
-compileObj ∷ String → IO () → IO ()
-compileObj file buildAction = do
+-- unless force will just check if file exists
+compileObj ∷ Bool → String → (IO (), S.Set String) → IO ()
+compileObj force file (buildAction, deps) = do
   currentObjectList ← readIORef objectsSet
   when (S.member file currentObjectList) $ do
     currentDir ← getCurrentDirectory
     let fullPath = currentDir </> file
-    buildAction -- building this file
     objExists ← doesFileExist fullPath
-    unless objExists $ exitWithError (fullPath ++ " doesn't exists")
+    when (not objExists || force) $ do
+      -- TODO: diagnose recursion to avoid stuck on runtime
+      unless (S.null deps) $ do
+        myPhonyActions  ← readIORef phonyActions
+        myObjects       ← readIORef objects
+        for_ (S.toList deps) $ \dep → do
+          for_ (M.lookup dep myObjects) (compileObj False dep)
+          -- TODO: here we don't check for phony deps
+          for_ (M.lookup dep myPhonyActions) $ \(phonyAction, _) →
+            compilePhony dep phonyAction
+      buildAction -- building this file
+      objExistsNow ← doesFileExist fullPath
+      unless objExistsNow $ exitWithError (fullPath ++ " doesn't exists")

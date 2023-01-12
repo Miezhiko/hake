@@ -25,8 +25,8 @@ phonyActions ∷ IORef (M.Map String (IO (), String))
 {-# NOINLINE phonyActions #-}
 phonyActions = unsafePerformIO $ newIORef M.empty
 
--- parsed objects
-objects ∷ IORef (M.Map String (IO ()))
+-- parsed objects (whit set of their deps)
+objects ∷ IORef (M.Map String (IO (), S.Set String))
 {-# NOINLINE objects #-}
 objects = unsafePerformIO      $ newIORef M.empty
 
