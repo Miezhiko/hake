@@ -32,9 +32,7 @@ import           Hake.Lang.Rust         as HakeLib
 import           Hake.Operators         as HakeLib
 import           Hake.Syntax            as HakeLib
 
-type Object = (String, (IO (), S.Set String))
-
-buildObjects ∷ [String] → [Object] → IO ()
+buildObjects ∷ [String] → [(String, (IO (), S.Set String))] → IO ()
 buildObjects _ [(f, bd)] = compileObj True f bd
 buildObjects [] objs =
   let sortedObjects =
