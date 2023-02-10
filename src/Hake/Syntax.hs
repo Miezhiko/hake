@@ -26,6 +26,12 @@ import           Hake.Core
 import           Hake.Global
 import           Hake.Optional
 
+removePhonyArg ∷ [String] → String → IO [String]
+removePhonyArg args arg = do
+  let filtered = filter (/= arg) args
+  writeIORef phonyArgs filtered
+  pure filtered
+
 phony ∷ (Optional1 [String] (String → IO () → IO ()) r) ⇒ r
 phony = opt1 gPhony []
 
@@ -34,8 +40,8 @@ gPhony [] arg phonyAction = do
   args ← readIORef phonyArgs
   let (an, de) = nameAndDesc arg
   if an ∈ args
-    then do phonyAction
-            filtered ← removePhonyArg args an
+    then do filtered ← removePhonyArg args an
+            phonyAction
             when (null filtered) exitSuccess
     else do currentPhony ← readIORef phonyActions
             let new = M.insert an (phonyAction, de) currentPhony
@@ -51,8 +57,8 @@ gPhony deps arg complexPhonyAction = do
         for_ (M.lookup dep myObjects) (compileObj False dep)
         for_ (M.lookup dep myPhonyActions) $ \(phonyAction, _) →
           compilePhony dep phonyAction
-      complexPhonyAction
       filtered ← removePhonyArg myPhonyArgs an
+      complexPhonyAction
       when (null filtered) exitSuccess
     else let new = M.insert an (complexPhonyAction, de) myPhonyActions
          in writeIORef phonyActions new

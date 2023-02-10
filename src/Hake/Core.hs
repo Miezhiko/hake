@@ -6,7 +6,6 @@ module Hake.Core
   ( compileObj
   , compilePhony
   , nameAndDesc
-  , removePhonyArg
   ) where
 
 import           Prelude.Unicode
@@ -37,18 +36,13 @@ nameAndDesc χ =
       then (strip (head splt), last splt)
       else (strip χ, "No description")
 
-removePhonyArg ∷ [String] → String → IO [String]
-removePhonyArg args arg = do
-  let filtered = filter (/= arg) args
-  writeIORef phonyArgs filtered
-  pure filtered
-
 compilePhony ∷ String → IO () → IO ()
 compilePhony rule phonyAction = do
-  phonyAction
   myPhonyArgs ← readIORef phonyArgs
   when (rule ∈ myPhonyArgs) $
-    void $ removePhonyArg myPhonyArgs rule
+    writeIORef phonyArgs
+      $ filter (/= rule) myPhonyArgs
+  phonyAction
 
 -- unless force will just check if file exists
 compileObj ∷ Bool → String → (IO (), S.Set String) → IO ()
