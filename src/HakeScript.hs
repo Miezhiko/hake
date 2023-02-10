@@ -66,7 +66,7 @@ checkForStackGHC γ =
 getGHC ∷ IO String
 getGHC = pure Nothing ≫= λ "ghc"
                       ≫= checkForStackGHC
-                      ≫= \res → pure $ fromMaybe "ghc" res
+                      ≫= (pure ◦ fromMaybe "ghc")
   where λ ∷ String → Maybe String → IO (Maybe String)
         λ χ prev = if isNothing prev
                       then versionCheck χ
@@ -123,10 +123,10 @@ hakeItF args dir force pretend hakefile = do
                                exitFailure
                              ExitSuccess → pure ()
 
-  let shArgs = if | force → filter (\ο → ο /= "-f"
-                                      && ο /= "--force") args
-                  | pretend → filter (\ο → ο /= "-p"
-                                        && ο /= "--pretend") args
+  let shArgs = if | force     → filter (liftM2 (&&) ("-f" /=)
+                                                    ("--force" /=)) args
+                  | pretend   → filter (liftM2 (&&) ("-p" /=)
+                                                    ("--pretend" /=)) args
                   | otherwise → args
 
   unless pretend $ runHake cscr shArgs
