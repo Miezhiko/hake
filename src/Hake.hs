@@ -6,6 +6,7 @@
 
 module Hake
   ( module HakeLib
+  , getHakeArgs
   , hake
   ) where
 
@@ -17,7 +18,10 @@ import qualified Data.Set               as S
 
 import           Control.Monad          (unless, when)
 
-import           Hake.Core              as HakeLib
+import           Hake.Core
+import           Hake.Global
+
+import           Hake.Common            as HakeLib
 
 import           Hake.Helper.FileSystem as HakeLib
 import           Hake.Helper.Syntax     as HakeLib
@@ -31,6 +35,9 @@ import           Hake.Lang.Rust         as HakeLib
 
 import           Hake.Operators         as HakeLib
 import           Hake.Syntax            as HakeLib
+
+getHakeArgs ∷ IO [String]
+getHakeArgs = readIORef phonyArgs
 
 buildObjects ∷ [String] → [(String, (IO (), S.Set String))] → IO ()
 buildObjects _ [(f, bd)] = compileObj True f bd
@@ -50,10 +57,10 @@ buildObjects args objs =
               compileObj True f bd
 
 hake ∷ IO () → IO ()
-hake maybeAction = do
+hake parseHakeFile = do
   args ← getArgs
   writeIORef phonyArgs args
-  maybeAction
+  parseHakeFile
   {- HLINT ignore "Redundant multi-way if" -}
   if | "-h" ∈ args ∨ "--help" ∈ args → displayHelp
      | otherwise → do

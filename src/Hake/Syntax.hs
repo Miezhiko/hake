@@ -11,14 +11,19 @@ module Hake.Syntax
   , phony
   ) where
 
-import           Data.Foldable (for_)
+import           Prelude.Unicode
+
+import           Data.Foldable   (for_)
 import           Data.IORef
-import qualified Data.Map      as M
-import qualified Data.Set      as S
+import qualified Data.Map        as M
+import qualified Data.Set        as S
 
 import           Control.Monad
 
+import           System.Exit     (exitSuccess)
+
 import           Hake.Core
+import           Hake.Global
 import           Hake.Optional
 
 phony ∷ (Optional1 [String] (String → IO () → IO ()) r) ⇒ r

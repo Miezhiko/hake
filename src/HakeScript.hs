@@ -8,11 +8,10 @@
 module HakeScript
   ( module Hake
   , hakeIt
-  , hakeItF
   ) where
 
 import           Hake
-import           Script
+import           Script             (getMTime, runHake)
 
 import           System.IO
 
