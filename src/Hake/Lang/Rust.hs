@@ -9,8 +9,8 @@ module Hake.Lang.Rust
 
 import           Hake.Common
 
-cargo ∷ [String] → IO ()
+cargo ∷ [String] -> IO ()
 cargo = raw "cargo"
 
-rustc ∷ [String] → IO ()
+rustc ∷ [String] -> IO ()
 rustc = raw "rustc"

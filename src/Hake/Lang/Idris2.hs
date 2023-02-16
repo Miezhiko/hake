@@ -8,5 +8,5 @@ module Hake.Lang.Idris2
 
 import           Hake.Common
 
-idris2 ∷ [String] → IO ()
+idris2 ∷ [String] -> IO ()
 idris2 = raw "idris2"

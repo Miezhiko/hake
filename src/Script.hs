@@ -26,17 +26,17 @@ import           System.Posix.Types
 import           Control.Monad
 
 #if ( defined(mingw32_HOST_OS) || defined(__MINGW32__) )
-getMTime ∷ FilePath → IO UTCTime
+getMTime ∷ FilePath -> IO UTCTime
 getMTime = getModificationTime
 #else
-getMTime ∷ FilePath → IO EpochTime
+getMTime ∷ FilePath -> IO EpochTime
 getMTime f = modificationTime <$> getFileStatus f
 #endif
 
-runHake ∷ String → [String] → IO ()
+runHake ∷ String -> [String] -> IO ()
 runHake cscr args =
 #if defined(mingw32_HOST_OS) || defined(__MINGW32__)
-  do pid ← runCommand (cscr ++ " " ++ intercalate " " args)
+  do pid <- runCommand (cscr ++ " " ++ intercalate " " args)
      waitForProcess pid >>= exitWith
 #else
   executeFile cscr False args Nothing

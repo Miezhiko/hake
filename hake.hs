@@ -39,8 +39,8 @@ main = hake $ do
   hakeExecutable ∷ String
   hakeExecutable =
     {- HLINT ignore "Redundant multi-way if" -}
-    if | os ∈ ["win32", "mingw32", "cygwin32"] → buildPath </> appName ++ ".exe"
-       | otherwise → buildPath </> appName
+    if | os ∈ ["win32", "mingw32", "cygwin32"] -> buildPath </> appName ++ ".exe"
+       | otherwise -> buildPath </> appName
 
-  copyExecutable ∷ String → IO ()
+  copyExecutable ∷ String -> IO ()
   copyExecutable = flip copyFile hakeExecutable

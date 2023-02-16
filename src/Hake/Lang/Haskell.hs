@@ -17,13 +17,13 @@ import           Data.List              (isPrefixOf)
 import           Data.String.Utils      (rstrip)
 import           Hake.Helper.FileSystem (removeIfExists)
 
-ghc ∷ [String] → IO ()
+ghc ∷ [String] -> IO ()
 ghc = raw "ghc"
 
-cabal ∷ [String] → IO ()
+cabal ∷ [String] -> IO ()
 cabal = raw "cabal"
 
-stack ∷ [String] → IO ()
+stack ∷ [String] -> IO ()
 stack = raw "stack"
 
 -- cabal build creates many cabal.project.local
@@ -34,9 +34,9 @@ cleanCabalLocal =
                       >>= traverse_ removeIfExists
        . filter (isPrefixOf "cabal.project.local")
 
-getCabalBuildPath ∷ String → IO String
+getCabalBuildPath ∷ String -> IO String
 getCabalBuildPath appName = do
-  (exitCode, stdOut, _stdErr) ←
+  (exitCode, stdOut, _stdErr) <-
       readProcessWithExitCode "cabal" ["list-bin", appName] []
   if exitCode == ExitSuccess
       then pure $ rstrip stdOut

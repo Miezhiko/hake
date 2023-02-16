@@ -10,11 +10,11 @@ module Hake.Lang.Js
 
 import           Hake.Common
 
-npm ∷ [String] → IO ()
+npm ∷ [String] -> IO ()
 npm = raw "npm"
 
-yarn ∷ [String] → IO ()
+yarn ∷ [String] -> IO ()
 yarn = raw "yarn"
 
-vue ∷ [String] → IO ()
+vue ∷ [String] -> IO ()
 vue = raw "vue"

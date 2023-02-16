@@ -23,37 +23,37 @@ infixl 5 ◉
 infixl 0 ∰, ∫, #>, ##>, @>, @@>, ♯, ♯♯
 
 -- tuple maker
-(◉) ∷ String → [String] → (String, [String])
+(◉) ∷ String -> [String] -> (String, [String])
 s ◉ ss = (s, ss)
 
 -- Phony operator
-(@>) ∷ String → IO () → IO ()
+(@>) ∷ String -> IO () -> IO ()
 r @> a = phony r a
 
 -- Phony' operator
-(@@>) ∷ (String, [String]) → IO () → IO ()
+(@@>) ∷ (String, [String]) -> IO () -> IO ()
 (r, d) @@> a = phony d r a
 
 -- Unicode variant of phony
-(∫) ∷ String → IO () → IO ()
+(∫) ∷ String -> IO () -> IO ()
 r ∫ a = phony r a
 
 -- Unicode variant of phony'
-(∰) ∷ (String, [String]) → IO () → IO ()
+(∰) ∷ (String, [String]) -> IO () -> IO ()
 (r, d) ∰ a = phony d r a
 
 -- Obj operator
-(#>) ∷ String → IO () → IO ()
+(#>) ∷ String -> IO () -> IO ()
 r #> a = obj r a
 
 -- Obj' operator
-(##>) ∷ (String, [String]) → IO () → IO ()
+(##>) ∷ (String, [String]) -> IO () -> IO ()
 (r, d) ##> a = obj d r a
 
 -- Unicode Obj operator
-(♯) ∷ FilePath → IO () → IO ()
+(♯) ∷ FilePath -> IO () -> IO ()
 r ♯ a = obj r a
 
 -- Unicode Obj' operator
-(♯♯) ∷ (FilePath, [String]) → IO () → IO ()
+(♯♯) ∷ (FilePath, [String]) -> IO () -> IO ()
 (r, d) ♯♯ a = obj d r a

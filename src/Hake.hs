@@ -39,11 +39,11 @@ import           Hake.Syntax            as HakeLib
 getHakeArgs ∷ IO [String]
 getHakeArgs = readIORef phonyArgs
 
-buildObjects ∷ [String] → [(String, (IO (), S.Set String))] → IO ()
+buildObjects ∷ [String] -> [(String, (IO (), S.Set String))] -> IO ()
 buildObjects _ [(f, bd)] = compileObj True f bd
 buildObjects [] objs =
   let sortedObjects =
-        sortBy (\(_, (_, d1)) (_, (_, d2)) →
+        sortBy (\(_, (_, d1)) (_, (_, d2)) ->
                   compare (S.size d1) (S.size d2)) objs
   in for_ sortedObjects $ uncurry (compileObj True)
 buildObjects args objs =
@@ -51,32 +51,32 @@ buildObjects args objs =
       objectsInArgs         = filter ((∈ args) . fst) objectsWithBaseNames
   in case objectsInArgs of
     [] -> buildObjects [] objs
-    xs -> for_ objectsWithBaseNames $ \(fbase, (f, bd)) →
+    xs -> for_ objectsWithBaseNames $ \(fbase, (f, bd)) ->
             let filtereredArgs = map fst xs
             in when (fbase ∈ filtereredArgs) $
               compileObj True f bd
 
-hake ∷ IO () → IO ()
+hake ∷ IO () -> IO ()
 hake parseHakeFile = do
-  args ← getArgs
+  args <- getArgs
   writeIORef phonyArgs args
   parseHakeFile
   {- HLINT ignore "Redundant multi-way if" -}
-  if | "-h" ∈ args ∨ "--help" ∈ args → displayHelp
-     | otherwise → do
-        myObjects ← readIORef objects
+  if | "-h" ∈ args ∨ "--help" ∈ args -> displayHelp
+     | otherwise -> do
+        myObjects <- readIORef objects
         unless (M.null myObjects) $
           buildObjects args (M.toList myObjects)
 
 displayHelp ∷ IO ()
 displayHelp = do
   myPhonies <- readIORef phonyActions
-  myObjects ← readIORef objects
+  myObjects <- readIORef objects
   unless (M.null myPhonies) $ do
     putStrLn "Current HakeScript options:"
     let phoniesList = M.toList myPhonies
         maxNameLen = maximum $ map (length . fst) phoniesList
-    for_ phoniesList $ \(r, (_, d)) →
+    for_ phoniesList $ \(r, (_, d)) ->
       let additionalSpacesCount = maxNameLen - length r
           spaces = replicate additionalSpacesCount ' '
       in putStrLn $ "  " ++ r ++ spaces ++ " :" ++ d
@@ -85,7 +85,7 @@ displayHelp = do
     putStrLn "Current HakeScript objects:"
     let objectsList = M.toList myObjects
         maxNameLen  = maximum $ map (length . takeBaseName . fst) objectsList
-    for_ objectsList $ \(r, (_, deps)) →
+    for_ objectsList $ \(r, (_, deps)) ->
       let based                 = takeBaseName r
           additionalSpacesCount = maxNameLen - length based
           spaces                = replicate additionalSpacesCount ' '

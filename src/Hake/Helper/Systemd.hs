@@ -8,5 +8,5 @@ module Hake.Helper.Systemd
 
 import           Hake.Common
 
-systemctl ∷ [String] → IO ()
+systemctl ∷ [String] -> IO ()
 systemctl = raw "systemctl"

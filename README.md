@@ -102,14 +102,14 @@ main = hake $ do
   salieriExecutable ∷ FilePath
   salieriExecutable =
     {- HLINT ignore "Redundant multi-way if" -}
-    if | os ∈ ["win32", "mingw32", "cygwin32"] → buildPath </> appNameSalieri ++ ".exe"
-       | otherwise → buildPath </> appNameSalieri
+    if | os ∈ ["win32", "mingw32", "cygwin32"] -> buildPath </> appNameSalieri ++ ".exe"
+       | otherwise -> buildPath </> appNameSalieri
 
   amadeusExecutable ∷ FilePath
   amadeusExecutable =
     {- HLINT ignore "Redundant multi-way if" -}
-    if | os ∈ ["win32", "mingw32", "cygwin32"] → buildPath </> appNameAmadeus ++ ".exe"
-       | otherwise → buildPath </> appNameAmadeus
+    if | os ∈ ["win32", "mingw32", "cygwin32"] -> buildPath </> appNameAmadeus ++ ".exe"
+       | otherwise -> buildPath </> appNameAmadeus
 ```
 
 ## Usage

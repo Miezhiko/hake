@@ -25,43 +25,43 @@ import           Control.Monad
 
 import           Hake.Global
 
-exitWithError ∷ String → IO ()
+exitWithError ∷ String -> IO ()
 exitWithError μ = do putStrLn $ "Error: " ++ μ
                      exitFailure
 
-nameAndDesc ∷ String → (String, String)
+nameAndDesc ∷ String -> (String, String)
 nameAndDesc χ =
   let splt = splitOn "|" χ
   in if length splt > 1
       then (strip (head splt), last splt)
       else (strip χ, "No description")
 
-compilePhony ∷ String → IO () → IO ()
+compilePhony ∷ String -> IO () -> IO ()
 compilePhony rule phonyAction = do
-  myPhonyArgs ← readIORef phonyArgs
+  myPhonyArgs <- readIORef phonyArgs
   when (rule ∈ myPhonyArgs) $
     writeIORef phonyArgs
       $ filter (/= rule) myPhonyArgs
   phonyAction
 
 -- unless force will just check if file exists
-compileObj ∷ Bool → String → (IO (), S.Set String) → IO ()
+compileObj ∷ Bool -> String -> (IO (), S.Set String) -> IO ()
 compileObj force file (buildAction, deps) = do
-  currentObjectList ← readIORef objectsSet
+  currentObjectList <- readIORef objectsSet
   when (S.member file currentObjectList) $ do
-    currentDir ← getCurrentDirectory
+    currentDir <- getCurrentDirectory
     let fullPath = currentDir </> file
-    objExists ← doesFileExist fullPath
+    objExists <- doesFileExist fullPath
     when (not objExists || force) $ do
       -- TODO: diagnose recursion to avoid stuck on runtime
       unless (S.null deps) $ do
-        myPhonyActions  ← readIORef phonyActions
-        myObjects       ← readIORef objects
-        for_ (S.toList deps) $ \dep → do
+        myPhonyActions <- readIORef phonyActions
+        myObjects      <- readIORef objects
+        for_ (S.toList deps) $ \dep -> do
           for_ (M.lookup dep myObjects) (compileObj False dep)
           -- TODO: here we don't check for phony deps
-          for_ (M.lookup dep myPhonyActions) $ \(phonyAction, _) →
+          for_ (M.lookup dep myPhonyActions) $ \(phonyAction, _) ->
             compilePhony dep phonyAction
       buildAction -- building this file
-      objExistsNow ← doesFileExist fullPath
+      objExistsNow <- doesFileExist fullPath
       unless objExistsNow $ exitWithError (fullPath ++ " doesn't exists")

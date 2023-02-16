@@ -13,20 +13,20 @@ module Hake.Helper.Utils
 
 import           Hake.Common
 
-make ∷ [String] → IO ()
+make ∷ [String] -> IO ()
 make = raw "make"
 
-configure ∷ [String] → IO ()
+configure ∷ [String] -> IO ()
 configure = raw "configure"
 
-curl ∷ [String] → IO ()
+curl ∷ [String] -> IO ()
 curl = raw "curl"
 
-git ∷ [String] → IO ()
+git ∷ [String] -> IO ()
 git = raw "git"
 
-grep ∷ [String] → IO ()
+grep ∷ [String] -> IO ()
 grep= raw "grep"
 
-sed ∷ [String] → IO ()
+sed ∷ [String] -> IO ()
 sed = raw "sed"

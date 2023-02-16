@@ -19,12 +19,12 @@ import           Control.Monad
 
 main ∷ IO ()
 main = do
-  hakeArgs ← getArgs
-  current  ← getCurrentDirectory
+  hakeArgs <- getArgs
+  current  <- getCurrentDirectory
   let (actions, _, _) = getOpt RequireOrder hakeOptions hakeArgs
   Options { optForce    = force
           , optPretend  = test
-          } ← foldl (>>=) (pure defaultOptions) actions
+          } <- foldl (>>=) (pure defaultOptions) actions
   hakeIt hakeArgs current force test
 
 data Options = Options
@@ -38,7 +38,7 @@ defaultOptions = Options {
   , optPretend  = False
   }
 
-hakeOptions ∷ [OptDescr (Options → IO Options)]
+hakeOptions ∷ [OptDescr (Options -> IO Options)]
 hakeOptions = [
   Option "v" ["version"]  (NoArg showV)             "Display Version",
   Option "h" ["help"]     (NoArg displayHelp)       "Display Help",
@@ -46,15 +46,15 @@ hakeOptions = [
   Option "P" ["pretend"]  (NoArg pretend)           "pretend building (testing hake script)"
   ]
 
-forceRebuild ∷ ∀ (m ∷ * → *). Monad m ⇒ Options → m Options
-pretend      ∷ ∀ (m ∷ * → *). Monad m ⇒ Options → m Options
+forceRebuild ∷ ∀ (m ∷ * -> *). Monad m ⇒ Options -> m Options
+pretend      ∷ ∀ (m ∷ * -> *). Monad m ⇒ Options -> m Options
 
 -- note ο is not o but greek ο!
 forceRebuild ο  = pure ο { optForce = True }
 pretend ο       = pure ο { optPretend = True }
 
-displayHelp :: Options → IO Options
+displayHelp :: Options -> IO Options
 displayHelp ο = do
-  prg ← getProgName
+  prg <- getProgName
   hPutStrLn stderr (usageInfo prg hakeOptions)
   pure ο { optForce = True }
