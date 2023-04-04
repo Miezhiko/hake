@@ -8,6 +8,7 @@ main = hake $ do
   -- phony clean @> is non-unicode operator alternative
   "clean | clean the project" ∫
     cabal ["clean"] >> removeDirIfExists buildPath
+                    >> cleanCabalLocal
 
   "stack | build using stack" ∫
     stack ["--local-bin-path", buildPath, "--copy-bins", "build"]
@@ -25,9 +26,15 @@ main = hake $ do
   "install | install to system" ◉ [hakeExecutable] ∰
     cabal ["install", "--overwrite-policy=always"]
 
+  -- build and run with --version
   "test | build and test" ◉ [hakeExecutable] ∰
     rawSystem hakeExecutable ["--version"]
       >>= checkExitCode
+
+  -- build and run custom command from args
+  "run | run compiled hake" ◉ [hakeExecutable] ∰
+    getHakeArgs >>= rawSystem hakeExecutable
+                >>= checkExitCode
 
  where
   appName ∷ String
