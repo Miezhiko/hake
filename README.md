@@ -26,10 +26,9 @@
 ```haskell
 {-# LANGUAGE MultiWayIf    #-}
 {-# LANGUAGE UnicodeSyntax #-}
+import           Hake
 
-import Hake
-
-import Data.List (intercalate)
+import           Data.List (intercalate)
 
 main ∷ IO ()
 main = hake $ do
@@ -63,6 +62,9 @@ main = hake $ do
     systemctl ["restart", appNameSalieri]
     systemctl ["restart", appNameAmadeus]
 
+  "run | run Amadeus" ◉ [ amadeusExecutable ] ∰ do
+    cargo . (("run" : buildFlagsAmadeus False) ++) . ("--" :) =<< getHakeArgs
+
  where
   appNameSalieri ∷ String
   appNameSalieri = "salieri"
@@ -78,8 +80,7 @@ main = hake $ do
 
   features ∷ [String]
   features = [ "trackers"
-             , "torch"
-             , "flo" ]
+             , "torch" ]
 
   fatArgs ∷ [String]
   fatArgs = [ "--profile"
@@ -102,14 +103,15 @@ main = hake $ do
   salieriExecutable ∷ FilePath
   salieriExecutable =
     {- HLINT ignore "Redundant multi-way if" -}
-    if | os ∈ ["win32", "mingw32", "cygwin32"] -> buildPath </> appNameSalieri ++ ".exe"
-       | otherwise -> buildPath </> appNameSalieri
+    if | os ∈ ["win32", "mingw32", "cygwin32"] → buildPath </> appNameSalieri ++ ".exe"
+       | otherwise → buildPath </> appNameSalieri
 
   amadeusExecutable ∷ FilePath
   amadeusExecutable =
     {- HLINT ignore "Redundant multi-way if" -}
-    if | os ∈ ["win32", "mingw32", "cygwin32"] -> buildPath </> appNameAmadeus ++ ".exe"
-       | otherwise -> buildPath </> appNameAmadeus
+    if | os ∈ ["win32", "mingw32", "cygwin32"] → buildPath </> appNameAmadeus ++ ".exe"
+       | otherwise → buildPath </> appNameAmadeus
+
 ```
 
 ## Usage
