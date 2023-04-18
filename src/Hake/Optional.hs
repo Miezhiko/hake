@@ -4,7 +4,6 @@
   , MultiParamTypeClasses
   , RankNTypes
   , Safe
-  , UnicodeSyntax
   #-}
 
 module Hake.Optional

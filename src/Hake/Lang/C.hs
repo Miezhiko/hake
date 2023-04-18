@@ -1,8 +1,3 @@
-{-# LANGUAGE
-    CPP
-  , UnicodeSyntax
-  #-}
-
 module Hake.Lang.C where
 
 import           Hake.Common

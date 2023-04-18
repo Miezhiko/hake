@@ -3,7 +3,6 @@
   , FlexibleContexts
   , FlexibleInstances
   , MultiParamTypeClasses
-  , UnicodeSyntax
   #-}
 
 module Hake.Syntax

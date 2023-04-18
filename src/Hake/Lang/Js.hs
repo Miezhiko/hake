@@ -1,7 +1,3 @@
-{-# LANGUAGE
-    UnicodeSyntax
-  #-}
-
 module Hake.Lang.Js
   ( npm
   , vue

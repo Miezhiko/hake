@@ -1,5 +1,5 @@
 name:           hake
-version:        0.2.2
+version:        0.2.3
 license:        LGPL-2.1
 category:       Development
 author:         Miezhiko
@@ -14,6 +14,11 @@ cabal-version:  2.0
 Library
   default-language: Haskell2010
   Hs-Source-Dirs: src
+  default-extensions:
+    CPP
+    LambdaCase
+    MultiWayIf
+    UnicodeSyntax
   exposed-modules:
       Hake
   Other-Modules:
@@ -43,12 +48,17 @@ Library
     , MissingH
     , containers
   ghc-options:
-    -Wall
+    -Wall -threaded -rtsopts -with-rtsopts=-N
 
 Executable    hake
   default-language: Haskell2010
   Main-Is: Main.hs
   Hs-Source-Dirs: src
+  default-extensions:
+    CPP
+    LambdaCase
+    MultiWayIf
+    UnicodeSyntax
   Other-Modules:
     HakeScript
     Version
@@ -83,6 +93,9 @@ Executable    hake
     , containers
     , hake
     , base-unicode-symbols
+
+  ghc-options:
+    -Wall -threaded -rtsopts -with-rtsopts=-N
 
   if !os(windows)
     Build-Depends:

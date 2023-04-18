@@ -1,7 +1,5 @@
 {-# LANGUAGE
-    CPP
-  , RankNTypes
-  , UnicodeSyntax
+    RankNTypes
   #-}
 
 module Script
@@ -9,21 +7,11 @@ module Script
   , runHake
   ) where
 
-import           System.Directory     (getModificationTime)
-import           System.Exit
-import           System.IO
-import           System.Process
-
-import           Data.List
-import           Data.Time.Clock
-
 #if ! ( defined(mingw32_HOST_OS) || defined(__MINGW32__) )
 import           System.Posix.Files
 import           System.Posix.Process
 import           System.Posix.Types
 #endif
-
-import           Control.Monad
 
 #if ( defined(mingw32_HOST_OS) || defined(__MINGW32__) )
 getMTime ∷ FilePath -> IO UTCTime

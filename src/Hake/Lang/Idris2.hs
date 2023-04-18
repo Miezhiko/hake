@@ -1,7 +1,3 @@
-{-# LANGUAGE
-    UnicodeSyntax
-  #-}
-
 module Hake.Lang.Idris2
   ( idris2
   ) where

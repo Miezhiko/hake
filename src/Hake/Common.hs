@@ -1,7 +1,3 @@
-{-# LANGUAGE
-    UnicodeSyntax
-  #-}
-
 module Hake.Common
   ( module SystemImports
   , checkExitCode
@@ -16,6 +12,8 @@ import           System.Exit        as SystemImports
 import           System.FilePath    as SystemImports
 import           System.Info        as SystemImports
 import           System.Process     as SystemImports
+
+import           Control.Exception  as SystemImports
 
 checkExitCode ∷ ExitCode -> IO ()
 checkExitCode ExitSuccess = pure ()

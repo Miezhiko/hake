@@ -1,25 +1,13 @@
-{-# LANGUAGE
-    CPP
-  , LambdaCase
-  , MultiWayIf
-  , UnicodeSyntax
-  #-}
-
 module HakeScript
   ( module Hake
   , hakeIt
   ) where
 
 import           Hake
-import           Script             (getMTime, runHake)
+import           Script        (getMTime, runHake)
 
 import           System.IO
 
-import           Data.Maybe
-import           Data.String.Utils
-
-import           Control.Concurrent
-import           Control.Exception
 import           Control.Monad
 
 #if ( defined(mingw32_HOST_OS) || defined(__MINGW32__) )
@@ -80,7 +68,7 @@ hakeIt ∷ [String]
 hakeIt args current force pretend = do
   let fullNamelhs = current </> "hake.lhs"
       fullNamehs  = current </> "hake.hs"
-      hakeHake    = hakeItF args current force pretend
+      hakeHake    = hakeItF args force pretend
   existslhs <- doesFileExist fullNamelhs
   existshs  <- doesFileExist fullNamehs
   if | existslhs -> hakeHake fullNamelhs
@@ -90,12 +78,11 @@ hakeIt args current force pretend = do
           putStrLn "no hake.hs / hake.lhs file"
 
 hakeItF ∷ [String]
-         -> String   -- current directory
          -> Bool     -- force
          -> Bool     -- pretend
          -> String   -- hake file
          -> IO ()
-hakeItF args dir force pretend hakefile = do
+hakeItF args force pretend hakefile = do
 #if ( defined(mingw32_HOST_OS) || defined(__MINGW32__) )
   -- on Windows GHC is not possibly in path (specially with stack)
   -- however we can look for it inside stack packages

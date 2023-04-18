@@ -1,6 +1,5 @@
 {-# LANGUAGE
     Safe
-  , UnicodeSyntax
   #-}
 
 module Hake.Helper.FileSystem

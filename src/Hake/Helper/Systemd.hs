@@ -1,7 +1,3 @@
-{-# LANGUAGE
-    UnicodeSyntax
-  #-}
-
 module Hake.Helper.Systemd
   ( systemctl
   ) where

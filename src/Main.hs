@@ -1,21 +1,19 @@
 {-# LANGUAGE
     KindSignatures
   , RankNTypes
-  , UnicodeSyntax
   #-}
+
+module Main
+  ( main
+  ) where
 
 import           HakeScript
 import           Version
 
-import           Foreign.Storable      (sizeOf)
+import           Data.Kind             (Type)
 
 import           System.Console.GetOpt
 import           System.IO
-
-import           Control.Applicative
-import           Control.Concurrent
-import           Control.Exception
-import           Control.Monad
 
 main ∷ IO ()
 main = do
@@ -27,10 +25,11 @@ main = do
           } <- foldl (>>=) (pure defaultOptions) actions
   hakeIt hakeArgs current force test
 
-data Options = Options
-  { optForce   ∷ Bool
-  , optPretend ∷ Bool
-  }
+data Options
+  = Options
+      { optForce   :: Bool
+      , optPretend :: Bool
+      }
 
 defaultOptions ∷ Options
 defaultOptions = Options {
@@ -46,14 +45,14 @@ hakeOptions = [
   Option "P" ["pretend"]  (NoArg pretend)           "pretend building (testing hake script)"
   ]
 
-forceRebuild ∷ ∀ (m ∷ * -> *). Monad m ⇒ Options -> m Options
-pretend      ∷ ∀ (m ∷ * -> *). Monad m ⇒ Options -> m Options
+forceRebuild ∷ ∀ (m ∷ Type -> Type). Monad m ⇒ Options -> m Options
+pretend      ∷ ∀ (m ∷ Type -> Type). Monad m ⇒ Options -> m Options
 
 -- note ο is not o but greek ο!
 forceRebuild ο  = pure ο { optForce = True }
 pretend ο       = pure ο { optPretend = True }
 
-displayHelp :: Options -> IO Options
+displayHelp ∷ Options -> IO Options
 displayHelp ο = do
   prg <- getProgName
   hPutStrLn stderr (usageInfo prg hakeOptions)

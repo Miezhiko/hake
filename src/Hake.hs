@@ -1,9 +1,3 @@
-{-# LANGUAGE
-    LambdaCase
-  , MultiWayIf
-  , UnicodeSyntax
-  #-}
-
 module Hake
   ( module HakeLib
   , getHakeArgs

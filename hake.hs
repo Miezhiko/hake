@@ -1,7 +1,14 @@
-{-# LANGUAGE MultiWayIf    #-}
-{-# LANGUAGE UnicodeSyntax #-}
+{-# LANGUAGE
+    MultiWayIf
+  , UnicodeSyntax
+  #-}
+
+module Main where
 
 import           Hake
+
+-- this import can be dropped with the next ver
+import           Control.Exception
 
 main ∷ IO ()
 main = hake $ do
@@ -14,12 +21,7 @@ main = hake $ do
     stack ["--local-bin-path", buildPath, "--copy-bins", "build"]
 
   -- building object rule #> is non-unicode operator alternative
-  hakeExecutable ♯ do
-    cabal ["install", "--only-dependencies", "--overwrite-policy=always"]
-    cabal ["configure"]
-    cabal ["build"]
-    getCabalBuildPath ("exe:" ++ appName) >>= copyExecutable
-    cleanCabalLocal
+  hakeExecutable ♯ hakeBuild `finally` cleanCabalLocal
 
   -- install phony depending on obj, @@> is non-unicode operator alternative
   -- ##> or ♯♯ is for dependent object rule, ◉ is just uncarry operator
@@ -47,7 +49,14 @@ main = hake $ do
   hakeExecutable =
     {- HLINT ignore "Redundant multi-way if" -}
     if | os ∈ ["win32", "mingw32", "cygwin32"] -> buildPath </> appName ++ ".exe"
-       | otherwise -> buildPath </> appName
+       | otherwise                             -> buildPath </> appName
 
   copyExecutable ∷ String -> IO ()
   copyExecutable = flip copyFile hakeExecutable
+
+  hakeBuild ∷ IO ()
+  hakeBuild = do
+    cabal ["install", "--only-dependencies", "--overwrite-policy=always"]
+    cabal ["configure"]
+    cabal ["build"]
+    getCabalBuildPath ("exe:" ++ appName) >>= copyExecutable
