@@ -7,15 +7,12 @@ module Main where
 
 import           Hake
 
--- this import can be dropped with the next ver
-import           Control.Exception
-
 main ∷ IO ()
 main = hake $ do
   -- phony clean @> is non-unicode operator alternative
   "clean | clean the project" ∫
-    cabal ["clean"] >> removeDirIfExists buildPath
-                    >> cleanCabalLocal
+    cabal ["clean"] `finally` removeDirIfExists buildPath
+                           >> cleanCabalLocal
 
   "stack | build using stack" ∫
     stack ["--local-bin-path", buildPath, "--copy-bins", "build"]

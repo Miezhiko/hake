@@ -2,6 +2,7 @@ module Hake.Common
   ( module SystemImports
   , checkExitCode
   , raw
+  , (?>)
   ) where
 
 import           Prelude.Unicode    as SystemImports
@@ -14,6 +15,11 @@ import           System.Info        as SystemImports
 import           System.Process     as SystemImports
 
 import           Control.Exception  as SystemImports
+
+infixl 0 ?>
+
+(?>) ∷ IO () -> IO () -> IO ()
+f1 ?> f2 = f1 `finally` f2
 
 checkExitCode ∷ ExitCode -> IO ()
 checkExitCode ExitSuccess = pure ()
