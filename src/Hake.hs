@@ -1,7 +1,10 @@
 module Hake
   ( module HakeLib
+  , for_
   , getHakeArgs
   , hake
+  , intercalate
+  , sortBy
   ) where
 
 import           Data.Foldable          (for_)

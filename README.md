@@ -26,15 +26,14 @@
 ```haskell
 {-# LANGUAGE MultiWayIf    #-}
 {-# LANGUAGE UnicodeSyntax #-}
-import           Hake
 
-import           Data.List (intercalate)
+import           Hake
 
 main ∷ IO ()
 main = hake $ do
 
   "clean | clean the project" ∫
-    cargo ["clean"] >> removeDirIfExists targetPath
+    cargo ["clean"] ?> removeDirIfExists targetPath
 
   "update | update dependencies" ∫ cargo ["update"]
 
@@ -78,9 +77,12 @@ main = hake $ do
   buildPath ∷ FilePath
   buildPath = targetPath </> "release"
 
-  features ∷ [String]
-  features = [ "trackers"
-             , "torch" ]
+  salieriFeatures ∷ [String]
+  salieriFeatures = [ "kafka" ]
+
+  amadeusFeatures ∷ [String]
+  amadeusFeatures = [ "trackers"
+                    , "torch" ]
 
   fatArgs ∷ [String]
   fatArgs = [ "--profile"
@@ -88,7 +90,9 @@ main = hake $ do
 
   buildFlagsSalieri ∷ Bool -> [String]
   buildFlagsSalieri fat =
-    let defaultFlags = [ "-p", appNameSalieri, "--release" ]
+    let defaultFlags = [ "-p", appNameSalieri
+                       , "--release", "--features"
+                       , intercalate "," salieriFeatures ]
     in if fat then defaultFlags ++ fatArgs
               else defaultFlags
 
@@ -96,7 +100,7 @@ main = hake $ do
   buildFlagsAmadeus fat =
     let defaultFlags = [ "-p", appNameAmadeus
                        , "--release", "--features"
-                       , intercalate "," features ]
+                       , intercalate "," amadeusFeatures ]
     in if fat then defaultFlags ++ fatArgs
               else defaultFlags
 
@@ -111,7 +115,6 @@ main = hake $ do
     {- HLINT ignore "Redundant multi-way if" -}
     if | os ∈ ["win32", "mingw32", "cygwin32"] → buildPath </> appNameAmadeus ++ ".exe"
        | otherwise → buildPath </> appNameAmadeus
-
 ```
 
 ## Usage
