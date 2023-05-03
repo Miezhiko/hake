@@ -3,22 +3,20 @@
   , UnicodeSyntax
   #-}
 
-module Main where
-
 import           Hake
 
 main ∷ IO ()
 main = hake $ do
   -- phony clean @> is non-unicode operator alternative
   "clean | clean the project" ∫
-    cabal ["clean"] `finally` removeDirIfExists buildPath
-                           >> cleanCabalLocal
+    cabal ["clean"] ?> removeDirIfExists buildPath
+                    >> cleanCabalLocal
 
   "stack | build using stack" ∫
     stack ["--local-bin-path", buildPath, "--copy-bins", "build"]
 
   -- building object rule #> is non-unicode operator alternative
-  hakeExecutable ♯ hakeBuild `finally` cleanCabalLocal
+  hakeExecutable ♯ hakeBuild ?> cleanCabalLocal
 
   -- install phony depending on obj, @@> is non-unicode operator alternative
   -- ##> or ♯♯ is for dependent object rule, ◉ is just uncarry operator
