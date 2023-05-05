@@ -52,6 +52,6 @@ main = hake $ do
   hakeBuild ∷ IO ()
   hakeBuild = do
     cabal ["install", "--only-dependencies", "--overwrite-policy=always"]
-    cabal ["configure"]
-    cabal ["build"]
+    cabalConfigure
+    cabalBuild
     getCabalBuildPath ("exe:" ++ appName) >>= copyExecutable

@@ -1,5 +1,7 @@
 module Hake.Lang.Haskell
   ( cabal
+  , cabalBuild
+  , cabalConfigure
   , cleanCabalLocal
   , getCabalBuildPath
   , ghc
@@ -8,9 +10,12 @@ module Hake.Lang.Haskell
 
 import           Hake.Common
 
+import           Control.Monad          (unless)
+
 import           Data.Foldable          (traverse_)
 import           Data.List              (isPrefixOf)
 import           Data.String.Utils      (rstrip)
+
 import           Hake.Helper.FileSystem (removeIfExists)
 
 ghc ∷ [String] -> IO ()
@@ -22,13 +27,21 @@ cabal = raw "cabal"
 stack ∷ [String] -> IO ()
 stack = raw "stack"
 
--- cabal build creates many cabal.project.local
--- I don't know why but those files look useless for me =_=
+cabalConfigure :: IO ()
+cabalConfigure = do
+  cwd' <- getCurrentDirectory
+  let localProjectFile = cwd' </> "cabal.project.local"
+  ex <- doesFileExist localProjectFile
+  unless ex $ cabal ["configure"]
+
+cabalBuild ∷ IO ()
+cabalBuild = cabal ["build"]
+
 cleanCabalLocal ∷ IO ()
 cleanCabalLocal =
   getCurrentDirectory >>= getDirectoryContents
                       >>= traverse_ removeIfExists
-       . filter (isPrefixOf "cabal.project.local")
+       . filter (isPrefixOf "cabal.project.local~")
 
 getCabalBuildPath ∷ String -> IO String
 getCabalBuildPath appName = do
