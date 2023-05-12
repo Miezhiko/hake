@@ -16,7 +16,7 @@ import           System.Process     as SystemImports
 
 import           Control.Exception  as SystemImports
 
-infixl 0 ?>
+infixl 5 ?>
 
 (?>) ∷ IO () -> IO () -> IO ()
 f1 ?> f2 = f1 `finally` f2

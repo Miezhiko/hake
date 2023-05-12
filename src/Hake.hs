@@ -59,7 +59,7 @@ hake parseHakeFile = do
   writeIORef phonyArgs args
   parseHakeFile
   {- HLINT ignore "Redundant multi-way if" -}
-  if | "-h" ∈ args ∨ "--help" ∈ args -> displayHelp
+  if | ["-h"] == args ∨ ["--help"] == args -> displayHelp
      | otherwise -> do
         myObjects <- readIORef objects
         unless (M.null myObjects) $

@@ -74,7 +74,7 @@ hakeIt args current force pretend = do
   if | existslhs -> hakeHake fullNamelhs
      | existshs  -> hakeHake fullNamehs
      | otherwise ->
-        unless ("-h" ∈ args ∨ "--help" ∈ args) $
+        unless (["-h"] == args ∨ ["--help"] == args) $
           putStrLn "no hake.hs / hake.lhs file"
 
 hakeItF ∷ [String]
