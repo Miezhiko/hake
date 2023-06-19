@@ -46,7 +46,6 @@ Library
     , filepath
     , time
     , base-unicode-symbols
-    , MissingH
     , containers
   ghc-options:
     -Wall -threaded -rtsopts -with-rtsopts=-N
