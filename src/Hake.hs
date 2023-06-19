@@ -19,6 +19,7 @@ import           Hake.Core
 import           Hake.Global
 
 import           Hake.Common            as HakeLib
+import           Hake.StripUtils        as HakeLib
 
 import           Hake.Helper.FileSystem as HakeLib
 import           Hake.Helper.Syntax     as HakeLib

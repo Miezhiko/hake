@@ -9,12 +9,12 @@ module Hake.Lang.Haskell
   ) where
 
 import           Hake.Common
+import           Hake.StripUtils
 
 import           Control.Monad          (unless)
 
 import           Data.Foldable          (traverse_)
 import           Data.List              (isPrefixOf)
-import           Data.String.Utils      (rstrip)
 
 import           Hake.Helper.FileSystem (removeIfExists)
 

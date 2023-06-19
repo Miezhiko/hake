@@ -15,11 +15,11 @@ import           Data.IORef
 import           Data.List.Split
 import qualified Data.Map          as M
 import qualified Data.Set          as S
-import           Data.String.Utils (strip)
 
 import           Control.Monad
 
 import           Hake.Global
+import           Hake.StripUtils (strip)
 
 exitWithError ∷ String -> IO ()
 exitWithError μ = do putStrLn $ "Error: " ++ μ

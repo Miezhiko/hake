@@ -1,5 +1,5 @@
 name:           hake
-version:        0.2.7
+version:        0.2.8
 license:        LGPL-2.1
 category:       Development
 author:         Miezhiko
@@ -28,6 +28,7 @@ Library
       Hake.Optional
       Hake.Core
       Hake.Common
+      Hake.StripUtils
       Hake.Lang.Haskell
       Hake.Lang.C
       Hake.Lang.Rust
@@ -71,6 +72,7 @@ Executable    hake
     Hake.Optional
     Hake.Core
     Hake.Common
+    Hake.StripUtils
     Hake.Lang.Haskell
     Hake.Lang.C
     Hake.Lang.Rust
@@ -89,7 +91,6 @@ Executable    hake
     , directory
     , filepath
     , time
-    , MissingH
     , containers
     , hake
     , base-unicode-symbols
