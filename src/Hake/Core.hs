@@ -32,32 +32,41 @@ nameAndDesc χ =
       then (strip (head splt), last splt)
       else (strip χ, "No description")
 
-compilePhony ∷ String -> IO () -> IO ()
-compilePhony rule phonyAction = do
+compilePhony ∷ String -> (IO (), S.Set String) -> IO ()
+compilePhony rule (phonyAction, deps) = do
   myPhonyArgs <- readIORef phonyArgs
   when (rule ∈ myPhonyArgs) $
     writeIORef phonyArgs
       $ filter (/= rule) myPhonyArgs
+  unless (S.null deps) $ do
+    for_ deps $ \dep -> do
+      myPhonyActions <- readIORef phonyActions
+      myObjects      <- readIORef objects
+      for_ (M.lookup dep myObjects) (compileObj False dep)
+      for_ (M.lookup dep myPhonyActions) $ \(depPhonyAction, _) ->
+        compilePhony dep (depPhonyAction, S.empty)
   phonyAction
 
--- unless force will just check if file exists
-compileObj ∷ Bool -> String -> (IO (), S.Set String) -> IO ()
-compileObj force file (buildAction, deps) = do
+-- recursive inner realization
+compileObj' ∷ Bool -> [String] -> String -> (IO (), S.Set String) -> IO ()
+compileObj' force parents file (buildAction, deps) = do
   currentObjectList <- readIORef objectsSet
-  when (S.member file currentObjectList) $ do
+  when (S.member file currentObjectList && file ∉ parents) $ do
     currentDir <- getCurrentDirectory
     let fullPath = currentDir </> file
     objExists <- doesFileExist fullPath
     when (not objExists || force) $ do
-      -- TODO: diagnose recursion to avoid stuck on runtime
       unless (S.null deps) $ do
         myPhonyActions <- readIORef phonyActions
         myObjects      <- readIORef objects
         for_ (S.toList deps) $ \dep -> do
-          for_ (M.lookup dep myObjects) (compileObj False dep)
-          -- TODO: here we don't check for phony deps
+          for_ (M.lookup dep myObjects) (compileObj' False (file : parents) dep)
           for_ (M.lookup dep myPhonyActions) $ \(phonyAction, _) ->
-            compilePhony dep phonyAction
+            compilePhony dep (phonyAction, S.empty)
       buildAction -- building this file
       objExistsNow <- doesFileExist fullPath
       unless objExistsNow $ exitWithError (fullPath ++ " doesn't exists")
+
+-- unless force will just check if file exists
+compileObj ∷ Bool -> String -> (IO (), S.Set String) -> IO ()
+compileObj force file bd = compileObj' force [] file bd

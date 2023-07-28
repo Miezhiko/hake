@@ -25,42 +25,31 @@ import           Hake.Core
 import           Hake.Global
 import           Hake.Optional
 
-removePhonyArg ∷ [String] -> String -> IO [String]
-removePhonyArg args arg =
-  let filtered = filter (/= arg) args
-  in writeIORef phonyArgs filtered
-    >> pure filtered
-
 phony ∷ (Optional1 [String] (String -> IO () -> IO ()) r) ⇒ r
 phony = opt1 gPhony []
 
 gPhony ∷ [String] -> String -> IO () -> IO ()
-gPhony [] arg phonyAction = do
-  args <- readIORef phonyArgs
-  let (an, de) = nameAndDesc arg
-  if an ∈ args
-    then do filtered <- removePhonyArg args an
-            phonyAction
-            when (null filtered) exitSuccess
-    else do currentPhony <- readIORef phonyActions
-            let new = M.insert an (phonyAction, de) currentPhony
-            writeIORef phonyActions new
-gPhony deps arg complexPhonyAction = do
-  myPhonyArgs     <- readIORef phonyArgs
-  myPhonyActions  <- readIORef phonyActions
+gPhony deps arg phonyAction = do
+  myPhonyArgs <- readIORef phonyArgs
   let (an, de) = nameAndDesc arg
   if an ∈ myPhonyArgs
     then do
-      myObjects <- readIORef objects
-      for_ deps $ \dep -> do
-        for_ (M.lookup dep myObjects) (compileObj False dep)
-        for_ (M.lookup dep myPhonyActions) $ \(phonyAction, _) ->
-          compilePhony dep phonyAction
-      filtered <- removePhonyArg myPhonyArgs an
-      complexPhonyAction
+      -- we don't just compilePhony here because
+      -- we leave early if phony is on our args
+      let filtered = filter (/= an) myPhonyArgs
+      writeIORef phonyArgs filtered
+      unless (null deps) $ do
+        for_ deps $ \dep -> do
+          myPhonyActions <- readIORef phonyActions
+          myObjects      <- readIORef objects
+          for_ (M.lookup dep myObjects) (compileObj False dep)
+          for_ (M.lookup dep myPhonyActions) $ \(depPhonyAction, _) ->
+            compilePhony dep (depPhonyAction, S.empty)
+      phonyAction
       when (null filtered) exitSuccess
-    else let new = M.insert an (complexPhonyAction, de) myPhonyActions
-         in writeIORef phonyActions new
+    else do myPhonyActions <- readIORef phonyActions
+            writeIORef phonyActions $
+              M.insert an (phonyAction, de) myPhonyActions
 
 obj ∷ (Optional1 [String] (FilePath -> IO () -> IO ()) r) ⇒ r
 obj = opt1 gObj []
