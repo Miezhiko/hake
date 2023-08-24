@@ -5,6 +5,7 @@ module Hake.Lang.Haskell
   , cleanCabalLocal
   , getCabalBuildPath
   , ghc
+  , elm
   , stack
   ) where
 
@@ -20,6 +21,9 @@ import           Hake.Helper.FileSystem (removeIfExists)
 
 ghc ∷ [String] -> IO ()
 ghc = raw "ghc"
+
+elm ∷ [String] -> IO ()
+elm = raw "elm"
 
 cabal ∷ [String] -> IO ()
 cabal = raw "cabal"
@@ -41,7 +45,7 @@ cleanCabalLocal ∷ IO ()
 cleanCabalLocal =
   getCurrentDirectory >>= getDirectoryContents
                       >>= traverse_ removeIfExists
-       . filter (isPrefixOf "cabal.project.local~")
+       ∘ filter (isPrefixOf "cabal.project.local~")
 
 getCabalBuildPath ∷ String -> IO String
 getCabalBuildPath appName = do

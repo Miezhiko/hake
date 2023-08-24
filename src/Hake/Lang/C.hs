@@ -24,6 +24,3 @@ vcshell []      = pure []
 nmake ∷ [String] -> IO ()
 nmake α = rawSystem "nmake" α >>= checkExitCode
 #endif
-
-qmake ∷ [String] -> IO ()
-qmake = raw "qmake"
