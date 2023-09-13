@@ -1,7 +1,3 @@
-{-# LANGUAGE
-    Safe
-  #-}
-
 module Hake.Helper.FileSystem
   ( copyDir
   , removeDirIfExists
