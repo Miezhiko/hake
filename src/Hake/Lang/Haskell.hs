@@ -3,9 +3,9 @@ module Hake.Lang.Haskell
   , cabalBuild
   , cabalConfigure
   , cleanCabalLocal
+  , elm
   , getCabalBuildPath
   , ghc
-  , elm
   , stack
   ) where
 
@@ -31,7 +31,7 @@ cabal = raw "cabal"
 stack ∷ [String] -> IO ()
 stack = raw "stack"
 
-cabalConfigure :: IO ()
+cabalConfigure ∷ IO ()
 cabalConfigure = do
   cwd' <- getCurrentDirectory
   let localProjectFile = cwd' </> "cabal.project.local"

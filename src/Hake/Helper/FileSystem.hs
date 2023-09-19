@@ -5,6 +5,7 @@ module Hake.Helper.FileSystem
   ) where
 
 import           Control.Exception
+import           Control.Monad     (unless)
 import           Data.Foldable     (for_)
 import           Prelude.Unicode
 
@@ -28,7 +29,8 @@ copyDir ∷ FilePath  -- source
         -> FilePath -- destination
         -> IO ()
 copyDir src dst = do
-  createDirectory dst
+  doesDirectoryExist dst >>= \dstDirExist ->
+    unless dstDirExist $ createDirectory dst
   content <- getDirectoryContents src
   let xs = filter (∉ [".", ".."]) content
   for_ xs $ \name -> let srcPath = src </> name
