@@ -27,28 +27,27 @@ checkIfSucc γ args =
               Right val -> do putStr $ γ ⧺ " : " ⧺ val
                               pure $ Just γ
 
-versionCheck          -- check for ghc --version
-  ∷ String            -- command to check
+versionCheck           -- check for ghc --version
+  ∷ String             -- command to check
   -> IO (Maybe String) -- Path to GHC in case of success
 versionCheck γ = checkIfSucc γ ["--version"]
 
 checkForStackGHC
   ∷ Maybe String
   -> IO (Maybe String)
-checkForStackGHC γ = if isNothing γ
-  then do
-    localAppData <- getEnv("LOCALAPPDATA")
-    let path = localAppData </> "Programs/stack/x86_64-windows/"
-    stackPackages <- getDirectoryContents path
-    let ghcPackages = filter (startswith "ghc") stackPackages
-    stackGHV <-
-      case ghcPackages of
-        [] -> do appData <- getEnv("APPDATA")
-                pure $ appData </> "local/bin/ghc.exe"
-        xs -> let lastGHC = last xs
-              in pure $ path </> lastGHC </> "bin/ghc.exe"
-    versionCheck stackGHV
-  else pure γ
+checkForStackGHC Nothing = do
+  localAppData <- getEnv("LOCALAPPDATA")
+  let path = localAppData </> "Programs/stack/x86_64-windows/"
+  stackPackages <- getDirectoryContents path
+  let ghcPackages = filter (startswith "ghc") stackPackages
+  stackGHV <-
+    case ghcPackages of
+      [] -> do appData <- getEnv("APPDATA")
+              pure $ appData </> "local/bin/ghc.exe"
+      xs -> let lastGHC = last xs
+            in pure $ path </> lastGHC </> "bin/ghc.exe"
+  versionCheck stackGHV
+checkForStackGHC (Just γ) = pure γ
 
 getGHC ∷ IO String
 getGHC = pure Nothing ≫= λ "ghc"
@@ -66,16 +65,13 @@ hakeIt ∷ [String]
         -> Bool    -- pretend
         -> IO ()
 hakeIt args current force pretend = do
-  let fullNamelhs = current </> "hake.lhs"
-      fullNamehs  = current </> "hake.hs"
+  let fullNamehs  = current </> "hake.hs"
       hakeHake    = hakeItF args force pretend
-  existslhs <- doesFileExist fullNamelhs
-  existshs  <- doesFileExist fullNamehs
-  if | existslhs -> hakeHake fullNamelhs
-     | existshs  -> hakeHake fullNamehs
-     | otherwise ->
-        unless (["-h"] == args ∨ ["--help"] == args) $
-          putStrLn "no hake.hs / hake.lhs file"
+  existshs <- doesFileExist fullNamehs
+  if existshs
+    then hakeHake fullNamehs
+    else unless (["-h"] == args ∨ ["--help"] == args) $
+           putStrLn "no hake.hs"
 
 hakeItF ∷ [String]
          -> Bool     -- force

@@ -140,7 +140,7 @@ Current HakeScript objects:
   salieri
 ```
 
-In root of your project you create file `hake.hs` or `hake.lhs`
+In root of your project you create file `hake.hs`
 then you run `hake` or `hake clean` or whatever other options you add to the script,
 please use `src/Hake.hs` to learn about all the operators, I will add more examples another time.
 

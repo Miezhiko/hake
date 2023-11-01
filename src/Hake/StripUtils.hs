@@ -1,3 +1,7 @@
+{-# LANGUAGE
+    Safe
+  #-}
+
 module Hake.StripUtils where
 
 import           Prelude.Unicode

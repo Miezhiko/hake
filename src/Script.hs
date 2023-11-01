@@ -1,7 +1,3 @@
-{-# LANGUAGE
-    RankNTypes
-  #-}
-
 module Script
   ( getMTime
   , runHake

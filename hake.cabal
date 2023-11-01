@@ -1,5 +1,5 @@
 name:           hake
-version:        0.3.1.1
+version:        0.3.1.2
 license:        LGPL-2.1
 category:       Development
 author:         Miezhiko
@@ -33,7 +33,6 @@ Library
       Hake.Lang.C
       Hake.Lang.Rust
       Hake.Lang.Js
-      Hake.Lang.Idris2
       Hake.Helper.Utils
       Hake.Helper.Systemd
       Hake.Helper.FileSystem
@@ -48,7 +47,7 @@ Library
     , base-unicode-symbols
     , containers
   ghc-options:
-    -Wall -threaded -rtsopts -with-rtsopts=-N
+    -Wall -threaded
 
 Executable    hake
   default-language: Haskell2010
@@ -76,7 +75,6 @@ Executable    hake
     Hake.Lang.C
     Hake.Lang.Rust
     Hake.Lang.Js
-    Hake.Lang.Idris2
     Hake.Helper.Utils
     Hake.Helper.Systemd
     Hake.Helper.FileSystem

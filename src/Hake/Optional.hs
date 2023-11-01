@@ -1,8 +1,6 @@
 {-# LANGUAGE
-    FlexibleContexts
-  , FlexibleInstances
+    FlexibleInstances
   , MultiParamTypeClasses
-  , RankNTypes
   , Safe
   #-}
 

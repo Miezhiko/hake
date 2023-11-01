@@ -1,8 +1,5 @@
 {-# LANGUAGE
-    DataKinds
-  , FlexibleContexts
-  , FlexibleInstances
-  , MultiParamTypeClasses
+    FlexibleContexts
   #-}
 
 module Hake.Syntax

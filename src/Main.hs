@@ -39,10 +39,10 @@ defaultOptions = Options {
 
 hakeOptions ∷ [OptDescr (Options -> IO Options)]
 hakeOptions = [
-  Option "v" ["version"]  (NoArg showV)             "Display Version",
-  Option "h" ["help"]     (NoArg displayHelp)       "Display Help",
-  Option "f" ["force"]    (NoArg forceRebuild)      "force script rebuild",
-  Option "P" ["pretend"]  (NoArg pretend)           "pretend building (testing hake script)"
+  Option "v" ["version"]  (NoArg showV)         "Display Version",
+  Option "h" ["help"]     (NoArg displayHelp)   "Display Help",
+  Option "f" ["force"]    (NoArg forceRebuild)  "force script rebuild",
+  Option "P" ["pretend"]  (NoArg pretend)       "pretend building (testing hake script)"
   ]
 
 forceRebuild ∷ ∀ (m ∷ Type -> Type). Monad m ⇒ Options -> m Options
