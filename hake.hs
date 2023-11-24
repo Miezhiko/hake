@@ -3,6 +3,8 @@
   , UnicodeSyntax
   #-}
 
+module Main where -- this is optional but stylish-haskell wants it
+
 import           Hake
 
 main ∷ IO ()

@@ -44,8 +44,7 @@ checkForStackGHC Nothing = do
     case ghcPackages of
       [] -> do appData <- getEnv("APPDATA")
               pure $ appData </> "local/bin/ghc.exe"
-      xs -> let lastGHC = last xs
-            in pure $ path </> lastGHC </> "bin/ghc.exe"
+      xs -> pure $ path </> last xs </> "bin/ghc.exe"
   versionCheck stackGHV
 checkForStackGHC (Just γ) = pure γ
 

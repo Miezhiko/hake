@@ -3,8 +3,7 @@
   #-}
 
 module Version
-  ( printVersion
-  , showHelp
+  ( showHelp
   , showV
   ) where
 
@@ -13,9 +12,6 @@ import           System.Exit
 
 import           Data.Version          (showVersion)
 import qualified Paths_hake            as My
-
-printVersion ∷ IO ()
-printVersion = putStrLn $ showVersion My.version
 
 showMyV      ∷ String
 showMyV      = showVersion My.version
