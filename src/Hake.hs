@@ -28,6 +28,7 @@ import           Hake.Helper.Utils      as HakeLib
 
 import           Hake.Lang.C            as HakeLib
 import           Hake.Lang.Haskell      as HakeLib
+import           Hake.Lang.Idris2       as HakeLib
 import           Hake.Lang.Rust         as HakeLib
 
 import           Hake.Operators         as HakeLib
